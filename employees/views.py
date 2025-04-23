@@ -27,6 +27,7 @@ def employee_list(request):
     return render(request, "employees/employee_list.html", {"employees": employees})
 
 
+# TODO Email, Username, Passwordを変更可能にする。
 @staff_member_required
 def employee_edit(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
