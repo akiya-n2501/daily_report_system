@@ -10,6 +10,12 @@ def home(request):
 
 
 @staff_member_required
+def employee_list(request):
+    employees = Employee.objects.all()
+    return render(request, "employees/employee_list.html", {"employees": employees})
+
+
+@staff_member_required
 def employee_new(request):
     if request.method == "POST":
         form = EmployeeUserForm(request.POST)
@@ -19,12 +25,6 @@ def employee_new(request):
     else:
         form = EmployeeUserForm()
     return render(request, "employees/employee_form.html", {"form": form})
-
-
-@staff_member_required
-def employee_list(request):
-    employees = Employee.objects.all()
-    return render(request, "employees/employee_list.html", {"employees": employees})
 
 
 @staff_member_required
