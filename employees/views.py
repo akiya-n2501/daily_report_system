@@ -4,6 +4,10 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .models import Employee
 
 
+def home(request):
+    return render(request, "home.html")
+
+
 @login_required
 def employee_create(request):
     if request.method == "POST":

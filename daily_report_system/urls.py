@@ -18,8 +18,11 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path
 
+from employees.views import home
+
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", home, name="home"),
     path("employees/", include("employees.urls")),
     path(
         "login/",
