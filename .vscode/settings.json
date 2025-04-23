@@ -1,0 +1,16 @@
+{
+    "cSpell.words": [
+        "asgi",
+        "direnv",
+        "ipynb",
+        "mypy",
+        "pyenv",
+        "pypackages",
+        "pytest",
+        "pytype",
+        "venv"
+    ],
+    "emmet.includeLanguages": {
+    "django-html": "html",
+},
+}

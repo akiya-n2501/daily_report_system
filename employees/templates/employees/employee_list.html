@@ -1,0 +1,24 @@
+<!-- employees/templates/employees/index.html -->
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Index</title>
+</head>
+
+<body>
+    <h1>従業員一覧</h1>
+    <a href="{% url 'employee_new' %}">新規作成</a>
+    <ul>
+        {% for emp in employees %}
+        <li>
+            {{ emp.name }} ({{ emp.email }})
+            <a href="{% url 'employee_edit' emp.pk %}">編集</a> /
+            <a href="{% url 'employee_delete_confirm' emp.pk %}">削除</a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>
