@@ -3,8 +3,11 @@
 {% block title %}従業員一覧{% endblock %}
 
 {% block content %}
+
 <h1>従業員一覧</h1>
-<a href="{% url 'employee_new' %}">新規作成</a>
+<a href="{% url 'employee_new' %}">
+  <button type="submit">新規作成</button>
+</a>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -25,7 +28,7 @@
           >編集</a
         >
         <a
-          href="{% url 'employee_delete' emp.pk %}"
+          href="{% url 'employee_delete_confirm' emp.pk %}"
           class="btn btn-sm btn-danger"
           >削除</a
         >

@@ -1,14 +1,11 @@
-<!-- employees/templates/employees/employee_new.html -->
-<!DOCTYPE html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <title>従業員の新規作成</title>
-  </head>
-  <body>
-    <h1>従業員の新規作成</h1>
-    <form method="POST" action="{% url 'employee_create' %}">
-      {% csrf_token %}
+{% extends "base.html" %}
+
+{% block title %}従業員の新規作成{% endblock title %}
+
+{% block content %}
+<h1>従業員の新規作成</h1>
+<form method="POST" action="{% url 'employee_create' %}">
+  {% csrf_token %}
       <label for="name">名前:</label>
       <input type="text" id="name" name="name" />
       <br /><br />
@@ -19,5 +16,5 @@
     </form>
 
     <p><a href="{% url 'employee_index' %}">一覧へ戻る</a></p>
-  </body>
-</html>
+
+{% endblock content %}

@@ -1,16 +1,11 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>従業員登録</title>
-</head>
-<body>
-    <h1>従業員登録フォーム</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">登録</button>
-    </form>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}従業員登録{% endblock title %}
+
+{% block content %}
+<h1>従業員登録フォーム</h1>
+<form method="post">
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit">登録</button>
+</form>
+{% endblock content %}
