@@ -32,6 +32,7 @@ class EmployeeViewsUnitTest(TestCase):
             username="staff", password="password", is_staff=True
         )
 
+    # employee_new
     def test_employee_new_view_post_valid(self):
         data = {
             "name": "New Employee",
@@ -45,3 +46,11 @@ class EmployeeViewsUnitTest(TestCase):
         response = views.employee_new(request)
         # POSTが有効なら302が通るはず
         self.assertEqual(response.status_code, 302)
+
+    # employee_list
+    def test_employee_list_view_valid(self):
+        request = self.factory.get(reverse("employee_index"))
+        request.user = self.staff_user
+        response = views.employee_list(request)
+        # GETが有効なら200が通るはず
+        self.assertEqual(response.status_code, 200)
