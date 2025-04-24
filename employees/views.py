@@ -1,5 +1,7 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView
 
 from .forms import EmployeeUserForm
 from .models import Employee
@@ -21,10 +23,11 @@ def employee_new(request):
     return render(request, "employees/employee_form.html", {"form": form})
 
 
-@staff_member_required
-def employee_list(request):
-    employees = Employee.objects.all()
-    return render(request, "employees/employee_list.html", {"employees": employees})
+@method_decorator(staff_member_required, name="dispatch")
+class EmployeeListView(ListView):
+    model = Employee
+    template_name = "employees/employee_list.html"
+    context_object_name = "employees"
 
 
 # TODO Email, Username, Passwordを変更可能にする。
