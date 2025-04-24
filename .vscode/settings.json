@@ -5,6 +5,7 @@
         "endcomment",
         "ipynb",
         "mypy",
+        "pycache",
         "pyenv",
         "pypackages",
         "pytest",
