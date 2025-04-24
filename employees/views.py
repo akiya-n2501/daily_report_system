@@ -48,7 +48,9 @@ def employee_update(request, pk):
 @staff_member_required
 def employee_delete_confirm(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
-    return render(request, "employees/employee_delete.html", {"employee": employee})
+    return render(
+        request, "employees/employee_delete_confirm.html", {"employee": employee}
+    )
 
 
 @staff_member_required
