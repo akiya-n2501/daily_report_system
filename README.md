@@ -4,4 +4,8 @@
 
 GitHub Flow
 
+<<<<<<< HEAD
 追記. targetをついか
+=======
+追記
+>>>>>>> 376b3b7a31c985f953befc636506272d9cdb1c9b
