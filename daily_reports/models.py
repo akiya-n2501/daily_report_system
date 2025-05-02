@@ -31,5 +31,5 @@ class DailyReportComment(models.Model):
 
     def __str__(self):
         return (
-            f"{self.employee.name} {self.daily_report.reported_on} {self.comment[:7]})"
+            f"{self.employee.name} {self.daily_report.reported_on} {self.comment[:7]}"
         )
