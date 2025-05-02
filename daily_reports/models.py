@@ -4,6 +4,7 @@ from employees.models import Employee
 
 
 class DailyReport(models.Model):
+    daily_report_code = models.AutoField(primary_key=True)
     employee_code = models.ForeignKey(Employee, on_delete=models.CASCADE)
     job_description = models.TextField(max_length=2000)
     reported_on = models.DateField()
