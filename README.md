@@ -4,4 +4,4 @@
 
 GitHub Flow
 
-追記
+追記. targetをついか
