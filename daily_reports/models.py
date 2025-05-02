@@ -22,11 +22,14 @@ class DailyReport(models.Model):
 
 
 class DailyReportComment(models.Model):
-    employee = models.ForeignKey("employees.Employee")
-    daily_report = models.ForeignKey("DailyReport")
+    daily_report_code = models.AutoField(primary_key=True)
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    daily_report = models.ForeignKey(DailyReport, on_delete=models.CASCADE)
     comment = models.TextField(max_length=2000)
     created_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.employee.name} {self.daily_report.reported_on.date.today()} {self.comment[:7]})"
+        return (
+            f"{self.employee.name} {self.daily_report.reported_on} {self.comment[:7]})"
+        )
