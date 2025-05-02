@@ -1,4 +1,3 @@
-# Create your models here.
 from django.db import models
 
 from employees.models import Employee
@@ -17,6 +16,3 @@ class DailyReport(models.Model):
                 fields=["employee_code", "reported_on"], name="uq_daily_report_01"
             )
         ]
-=======
-from django.db import models
-
