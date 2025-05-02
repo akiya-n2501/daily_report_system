@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Create your models here.
 from django.db import models
 
@@ -21,5 +20,3 @@ class DailyReport(models.Model):
 =======
 from django.db import models
 
-# Create your models here.
->>>>>>> 376b3b7a31c985f953befc636506272d9cdb1c9b
