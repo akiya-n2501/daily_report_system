@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import DailyReportComment
+from .models import DailyReportComment, DailyReport
 from employees.models import Employee, User
 
 
