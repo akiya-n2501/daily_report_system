@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Create your models here.
 from django.db import models
 
@@ -17,3 +18,8 @@ class DailyReport(models.Model):
                 fields=["employee_code", "reported_on"], name="uq_daily_report_01"
             )
         ]
+=======
+from django.db import models
+
+# Create your models here.
+>>>>>>> 376b3b7a31c985f953befc636506272d9cdb1c9b
