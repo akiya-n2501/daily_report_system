@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "employees.apps.EmployeesConfig",
+    "daily_reports.apps.DailyReportsConfig",
     "accounts",
 ]
 
@@ -52,7 +53,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "daily_report_system.urls"
+ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
     {
@@ -70,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "daily_report_system.wsgi.application"
+WSGI_APPLICATION = "config.wsgi.application"
 
 
 # Database
