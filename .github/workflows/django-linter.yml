@@ -21,10 +21,10 @@ jobs:
           pip install black pylint djlint
 
       - name: Black 実行（フォーマットチェック）
-        run: black --check .
+        run: black --check --exclude "migrations/" .
 
       - name: Pylint 実行（コード解析）
-        run: pylint $(git ls-files '*.py')
+        run: pylint --ignore=migrations $(git ls-files '*.py')
 
       - name: DjLint 実行（Djangoテンプレートのチェック）
         run: djlint templates/
