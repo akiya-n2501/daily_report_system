@@ -5,10 +5,9 @@
 {% block content %}
 <h1>日報コメント登録フォーム</h1>
 
+投稿者：{{employee_name}} 日付:{{ reported_on|date:"Y/m/d" }}<p>
 
-<h2>{{reported_on}} {{employee_name}}</h2>
-
-{{job_description}}
+内容： {{job_description}}
 
 <form method="post">
   {% csrf_token %}

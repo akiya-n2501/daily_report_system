@@ -7,6 +7,6 @@ urlpatterns = [
     path(
         "<int:report_id>/comment/new/",
         DailyReportCommentCreateView.as_view(),
-        name="employee_index",
+        name="daily_report_comment_new",
     ),
 ]
