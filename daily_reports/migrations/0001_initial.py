@@ -17,20 +17,15 @@ class Migration(migrations.Migration):
             name='DailyReport',
             fields=[
                 (
-                    'id',
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name='ID',
-                    ),
+                    'daily_report_code',
+                    models.AutoField(primary_key=True, serialize=False),
                 ),
                 ('job_description', models.TextField(max_length=2000)),
                 ('reported_on', models.DateField()),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 (
-                    'employee',
+                    'employee_code',
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         to='employees.employee',
@@ -41,7 +36,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name='dailyreport',
             constraint=models.UniqueConstraint(
-                fields=('employee', 'reported_on'), name='uq_daily_report_01'
+                fields=('employee_code', 'reported_on'), name='uq_daily_report_01'
             ),
         ),
     ]
