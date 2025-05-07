@@ -5,4 +5,4 @@ from .models import DailyReport
 class DailyReportForm(forms.ModelForm):
     class Meta:
         model = DailyReport
-        fields =['job_description']
+        fields = ['job_description']
