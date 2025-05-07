@@ -16,17 +16,12 @@ class Migration(migrations.Migration):
             name='DailyReportComment',
             fields=[
                 (
-                    'id',
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name='ID',
-                    ),
+                    'daily_report_code',
+                    models.AutoField(primary_key=True, serialize=False),
                 ),
                 ('comment', models.TextField(max_length=2000)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('update_at', models.DateTimeField(auto_now=True)),
+                ('updated_at', models.DateTimeField(auto_now=True)),
                 (
                     'daily_report',
                     models.ForeignKey(
@@ -35,7 +30,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    'employee',
+                    'employee_code',
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         to='employees.employee',
