@@ -4,8 +4,19 @@
 
 {% block content %}
 <h1>日報コメント登録フォーム</h1>
+
+
+<h2>{{reported_on}} {{employee_name}}</h2>
+
+{{job_description}}
+
 <form method="post">
-  {% csrf_token %} {{ form.as_p }}
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="{{ form.comment.id_for_label }}">コメント:</label>
+    <p>
+    {{ form.comment }}
+</div>
   <button type="submit">登録</button>
 </form>
 {% endblock content %}

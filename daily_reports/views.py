@@ -20,5 +20,14 @@ class DailyReportCommentCreateView(CreateView):
         employee = Employee.objects.get(user=self.request.user)
 
         form.instance.employee_code = employee
-        form.instance.daily_report_code = daily_report  # `DailyReport` をセット
+        form.instance.daily_report_code = daily_report
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        daily_report = get_object_or_404(DailyReport, id=self.kwargs["report_id"])
+
+        context = super().get_context_data(**kwargs)
+        context["employee_name"] = daily_report.employee_code.name
+        context["reported_on"] = daily_report.reported_on
+        context["job_description"] = daily_report.job_description
+        return context
