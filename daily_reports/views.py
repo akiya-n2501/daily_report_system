@@ -16,7 +16,7 @@ class DailyReportCommentCreateView(CreateView):
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
-        daily_report = get_object_or_404(DailyReport, id=self.kwargs["report_id"])
+        daily_report = get_object_or_404(DailyReport, id=self.kwargs.get("report_id"))
         employee = Employee.objects.get(user=self.request.user)
 
         form.instance.employee_code = employee
@@ -24,7 +24,7 @@ class DailyReportCommentCreateView(CreateView):
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
-        daily_report = get_object_or_404(DailyReport, id=self.kwargs["report_id"])
+        daily_report = get_object_or_404(DailyReport, id=self.kwargs.get("report_id"))
 
         context = super().get_context_data(**kwargs)
         context["employee_name"] = daily_report.employee_code.name
