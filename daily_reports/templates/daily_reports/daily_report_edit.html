@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}日報の編集{% endblock title %}
+
+{% block content %}
+  <div id="wrap" class="clearfix">
+    <div class="content">
+      <div class="main">
+        <section class="career">
+        <h1>日報の更新</h1>
+        <form method="POST">
+            <table>
+              {{ form.as_table }}
+            </table>
+          {% csrf_token %}
+
+          <button class="button" type="submit">登録</button>
+
+      </form>
+      </section>
+{% endblock %}
