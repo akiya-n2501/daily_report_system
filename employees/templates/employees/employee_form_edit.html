@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}従業員編集{% endblock title %}
+
+{% block content %}
+<h1>従業員編集フォーム</h1>
+<form method="post">
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit">更新</button>
+</form>
+{% endblock content %}
