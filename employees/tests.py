@@ -31,6 +31,21 @@ class EmployeeViewsUnitTest(TestCase):
         self.staff_user = User.objects.create_user(
             username="staff", password="password", is_staff=True
         )
+        self.user1 = User.objects.create_user(
+            username="user1", password="testpass123", is_staff=True
+        )
+        self.user2 = User.objects.create_user(
+            username="user2", password="testpass123", is_staff=False
+        )
+        self.employee1 = Employee.objects.create(
+            user=self.user1, name="aiueo", email="aiueo@example.com", department="HR"
+        )
+        self.employee2 = Employee.objects.create(
+            user=self.user2,
+            name="kakikukeko",
+            email="kakikukeko@example.com",
+            department="HR",
+        )
 
     # employee_new
     def test_employee_new_view_post_valid(self):
@@ -48,9 +63,17 @@ class EmployeeViewsUnitTest(TestCase):
         self.assertEqual(response.status_code, 302)
 
     # employee_list
-    def test_employee_list_view_valid(self):
-        request = self.factory.get(reverse("employee_index"))
-        request.user = self.staff_user
-        response = views.EmployeeListView.as_view()(request)
-        # GETが有効なら200が通るはず
+    def test_employee_list_view(self):
+        self.client.force_login(self.user1)
+        response = self.client.get(reverse("employee_index"))
         self.assertEqual(response.status_code, 200)
+
+        content = response.content.decode("utf-8")
+
+        self.assertIn("aiueo", content)
+        self.assertIn("HR", content)
+        self.assertIn("True", content)  # is_staffがTrue
+
+        self.assertIn("kakikukeko", content)
+        self.assertIn("HR", content)
+        self.assertIn("False", content)  # is_staffがFalse
