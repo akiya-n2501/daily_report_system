@@ -15,12 +15,32 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='DailyReportComment',
             fields=[
-                ('daily_report_code', models.AutoField(primary_key=True, serialize=False)),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('comment', models.TextField(max_length=2000)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('update_at', models.DateTimeField(auto_now=True)),
-                ('daily_report', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='daily_reports.dailyreport')),
-                ('employee', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='employees.employee')),
+                (
+                    'daily_report',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='daily_reports.dailyreport',
+                    ),
+                ),
+                (
+                    'employee',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='employees.employee',
+                    ),
+                ),
             ],
         ),
     ]
