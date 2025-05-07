@@ -16,12 +16,26 @@ class DailyReportCommentCreateView(CreateView):
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
+        self.kwargs = self.request.resolver_match.kwargs
         daily_report = get_object_or_404(DailyReport, id=self.kwargs.get("report_id"))
         employee = Employee.objects.get(user=self.request.user)
 
         form.instance.employee_code = employee
         form.instance.daily_report_code = daily_report
         return super().form_valid(form)
+
+    def form_invalid(self, form):
+        self.kwargs = self.request.resolver_match.kwargs
+        daily_report = get_object_or_404(DailyReport, id=self.kwargs.get("report_id"))
+
+        context = self.get_context_data(
+            form=form
+        )  # `form` を含めることでテンプレートでエラー表示が可能
+        context["employee_name"] = daily_report.employee_code.name
+        context["reported_on"] = daily_report.reported_on
+        context["job_description"] = daily_report.job_description
+
+        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
         daily_report = get_object_or_404(DailyReport, id=self.kwargs.get("report_id"))

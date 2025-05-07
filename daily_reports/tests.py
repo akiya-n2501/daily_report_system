@@ -2,7 +2,7 @@ from django.test import TestCase
 from .models import DailyReportComment, DailyReport
 from employees.models import Employee, User
 from django.test.client import RequestFactory
-from django.urls import reverse
+from django.urls import reverse, resolve
 
 from . import views
 
@@ -82,14 +82,55 @@ class DailyReportCommentViewsUnitTest(TestCase):
         data = {
             "comment": "これはコメントです。",
         }
-        request = self.factory.post(
-            reverse(
-                "daily_report_comment_new", kwargs={"report_id": self.daily_report.pk}
-            ),
-            data,
+        url = reverse(
+            "daily_report_comment_new", kwargs={"report_id": self.daily_report.pk}
         )
+        request = self.factory.post(url, data)
+
+        resolver_match = resolve(url)
+        request.resolver_match = resolver_match
+        request.resolver_match.kwargs["report_id"] = self.daily_report.pk
 
         request.user = self.user1
         response = views.DailyReportCommentCreateView.as_view()(request)
         # POSTが有効なら302が通るはず
         self.assertEqual(response.status_code, 302)
+
+    def test_daily_report_comment_new_view_post_created(self):
+        data = {
+            "comment": "これはコメントです。",
+        }
+        url = reverse(
+            "daily_report_comment_new", kwargs={"report_id": self.daily_report.pk}
+        )
+        request = self.factory.post(url, data)
+
+        resolver_match = resolve(url)
+        request.resolver_match = resolver_match
+        request.resolver_match.kwargs["report_id"] = self.daily_report.pk
+
+        request.user = self.user1
+        response = views.DailyReportCommentCreateView.as_view()(request)
+
+        self.assertEqual(DailyReportComment.objects.count(), 1)
+
+        comment = DailyReportComment.objects.first()
+        self.assertEqual(comment.comment, "これはコメントです。")
+        self.assertEqual(comment.employee_code, self.employee)
+        self.assertEqual(comment.daily_report_code, self.daily_report)
+
+    def test_daily_report_comment_invalid_form(self):
+        data = {"comment": ""}
+        url = reverse(
+            "daily_report_comment_new", kwargs={"report_id": self.daily_report.pk}
+        )
+        request = self.factory.post(url, data)
+
+        resolver_match = resolve(url)
+        request.resolver_match = resolver_match
+        request.resolver_match.kwargs["report_id"] = self.daily_report.pk
+
+        request.user = self.user1
+        response = views.DailyReportCommentCreateView.as_view()(request)
+
+        self.assertEqual(response.status_code, 200)
