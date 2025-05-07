@@ -21,7 +21,7 @@ jobs:
           pip install black pylint djlint
 
       - name: Black 実行（フォーマットチェック）
-        run: black --check --exclude "migrations/" .
+        run: black --check --exclude "migrations/" --skip-string-normalization　.
 
       - name: Pylint 実行（コード解析）
         run: pylint --ignore=migrations $(git ls-files '*.py')
