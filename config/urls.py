@@ -24,6 +24,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", home, name="home"),
     path("employees/", include("employees.urls")),
+    path("dailyReports/", include("daily_reports.urls")),
     path(
         "login/",
         auth_views.LoginView.as_view(template_name="accounts/login.html"),
