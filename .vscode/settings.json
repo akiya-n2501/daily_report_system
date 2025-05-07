@@ -3,6 +3,7 @@
         "asgi",
         "direnv",
         "endcomment",
+        "endfor",
         "ipynb",
         "mypy",
         "pycache",
