@@ -13,14 +13,16 @@
     <tr>
       <th>名前</th>
       <th>部署</th>
+      <th>管理職</th>
       <th>アクション</th>
     </tr>
   </thead>
   <tbody>
-    {% for emp in employees %}
+    {% for emp in employee %}
     <tr>
       <td>{{ emp.name }}</td>
       <td>{{ emp.department }}</td>
+      <td>{{ emp.user.is_staff }}</td>
       <td>
         <a
           href="{% url 'employee_edit' emp.pk %}"
