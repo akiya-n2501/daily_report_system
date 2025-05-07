@@ -44,7 +44,7 @@ class DailyReportCommentTest(TestCase):
     def test_report_comment_str_with_user(self):
         daily_report_comment = DailyReportComment.objects.create(
             employee_code=self.manager,
-            daily_report=self.daily_report,
+            daily_report_code=self.daily_report,
             comment="これはコメントです。",
         )
         self.assertEqual(
