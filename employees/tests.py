@@ -51,6 +51,6 @@ class EmployeeViewsUnitTest(TestCase):
     def test_employee_list_view_valid(self):
         request = self.factory.get(reverse("employee_index"))
         request.user = self.staff_user
-        response = views.employee_list(request)
+        response = views.EmployeeListView.as_view()(request)
         # GETが有効なら200が通るはず
         self.assertEqual(response.status_code, 200)
