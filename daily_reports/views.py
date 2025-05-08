@@ -23,5 +23,5 @@ class DailyReportCreateView(CreateView):
     form_class = DailyReportForm
     
     template_name = "daily_reports/daily_report_new.html"
-    success_url = "/"
+    success_url = "/daily_reports/"
 # success_url 変更する必要あり
