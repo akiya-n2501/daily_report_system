@@ -3,13 +3,13 @@ from django.shortcuts import render
 from .forms import DailyReportForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.decorators import method_decorator
+from django.utils.timezone import make_aware
 from django.views.generic import CreateView, ListView
 
-from .forms import DailyReportCommentForm
+from .forms import DailyReportCommentForm, DailyReportSearchForm
 from .models import DailyReport, DailyReportComment, Employee
 
 
@@ -78,23 +78,45 @@ class DailyReportSearchView(ListView):
     template_name = "daily_reports/daily_report_list.html"
     context_object_name = "daily_reports"
 
-    def get_queryset(self):
-        query = self.request.GET.get("q", None)
-
-        # 検索
-        if query:
-            results = DailyReport.objects.filter(
-                Q(job_description__icontains=query)
-                | Q(employee_code__name__icontains=query)
-            )
-        else:
-            results = DailyReport.objects.all()
-
-        return results
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["employee"] = Employee.objects.select_related("employee_code").values(
             "name"
         )
+        context["form"] = DailyReportSearchForm(self.request.GET)
         return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        form = DailyReportSearchForm(self.request.GET)
+
+        if form.is_valid():
+            keyword = form.cleaned_data.get("keyword")
+            start_date = form.cleaned_data.get("start_date")
+            end_date = form.cleaned_data.get("end_date")
+
+            # 検索
+            if keyword:
+                queryset = queryset.filter(
+                    job_description__icontains=keyword
+                ) | queryset.filter(employee_code__name__icontains=keyword)
+            if start_date and end_date:
+                queryset = queryset.filter(
+                    reported_on__range=(
+                        make_aware(datetime.combine(start_date, datetime.min.time())),
+                        make_aware(datetime.combine(end_date, datetime.max.time())),
+                    )
+                )
+            elif start_date:
+                queryset = queryset.filter(
+                    reported_on__gte=make_aware(
+                        datetime.combine(start_date, datetime.min.time())
+                    )
+                )
+            elif end_date:
+                queryset = queryset.filter(
+                    reported_on__lte=make_aware(
+                        datetime.combine(end_date, datetime.max.time())
+                    )
+                )
+            return queryset
