@@ -60,7 +60,7 @@ class DailyReportCommentTest(TestCase):
         )
 
 
-# 日報
+# 日報コメント新規作成画面のテスト
 class DailyReportCommentCreateViewUnitTest(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -129,6 +129,7 @@ class DailyReportCommentCreateViewUnitTest(TestCase):
         response = self.client.post(url, data)
 
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "コメントは1文字以上で入力してください。")
 
 
 # 日報一覧画面の単体テスト

@@ -30,6 +30,16 @@
     <p>
     {{ form.comment }}
 </div>
+
+<!-- コメントフィールドのエラーメッセージを表示 -->
+{% if form.comment.errors %}
+    <div class="alert alert-danger">
+        {% for error in form.comment.errors %}
+            <p>{{ error }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+
   <button type="submit">登録</button>
 </form>
 {% endblock content %}
