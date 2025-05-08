@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.utils.timezone import make_aware
 from django.views.generic import CreateView, ListView
 
-from .forms import DailyReportCommentForm, DailyReportSearchForm
+from .forms import DailyReportCommentForm, DailyReportForm, DailyReportSearchForm
 from .models import DailyReport, DailyReportComment, Employee
 
 
@@ -57,6 +57,20 @@ class DailyReportListView(ListView):
             "name"
         )
         return context
+
+
+# 日報新規登録
+@method_decorator(login_required, name="dispatch")
+class DailyReportCreateView(CreateView):
+    model = DailyReport
+    form_class = DailyReportForm
+
+    template_name = "daily_reports/daily_report_new.html"
+
+    def get_success_url(self):
+        return reverse(
+            "daily_report_index",
+        )
 
 
 # 日報検索
