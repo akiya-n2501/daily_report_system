@@ -54,7 +54,7 @@ class EmployeeViewsUnitTest(TestCase):
             "department": "HR",
             "email": "newemployee@example.com",
             "username": "newuser",
-            "password": "newpassword",
+            "password": "newpassword01",
         }
         request = self.factory.post(reverse("employee_new"), data)
         request.user = self.staff_user
@@ -140,3 +140,17 @@ class EmployeeUpdateViewsUnitTest(TestCase):
 
         self.user.refresh_from_db()
         self.assertTrue(self.user.check_password('newPassword01'))
+
+    def test_post_update_view_with_password(self):
+        data = {
+            "name": "Bob",
+            "email": "bob@example.com",
+            "username": "newUser1",
+            "password": "newPassword",
+        }
+        self.client.login(username="staff", password="password")
+
+        response = self.client.post(self.url, data)
+        self.assertContains(
+            response, "パスワードは英数字を含む8文字以上にしてください。"
+        )
