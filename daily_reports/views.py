@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.views.generic import CreateView, ListView
 from django.shortcuts import render
 from .forms import DailyReportForm
