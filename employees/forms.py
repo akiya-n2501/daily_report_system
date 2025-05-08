@@ -13,16 +13,22 @@ password_validator = RegexValidator(
 
 
 class EmployeeUserForm(forms.ModelForm):
-    username = forms.CharField(max_length=50, required=True)
+    username = forms.CharField(max_length=50, required=True, label="ユーザー名")
     password = forms.CharField(
         widget=forms.PasswordInput,
         required=True,
         validators=[password_validator],  # バリデーション適用
+        label="パスワード",
     )
 
     class Meta:
         model = Employee
         fields = ["name", "email", "department", "username", "password"]
+        labels = {
+            "name": "名前",
+            "email": "メールアドレス",
+            "department": "部署",
+        }
 
     def save(self, commit=True):
         employee = super().save(commit=False)
@@ -36,16 +42,22 @@ class EmployeeUserForm(forms.ModelForm):
 
 
 class EmployeeUserEditForm(forms.ModelForm):
-    username = forms.CharField(max_length=50, required=True)
+    username = forms.CharField(max_length=50, required=True, label="ユーザー名")
     password = forms.CharField(
         widget=forms.PasswordInput,
         required=False,
         validators=[password_validator],  # バリデーション適用
+        label="パスワード",
     )
 
     class Meta:
         model = Employee
         fields = ["name", "email", "department", "username", "password"]
+        labels = {
+            "name": "名前",
+            "email": "メールアドレス",
+            "department": "部署",
+        }
 
     # userをformのインスタンスに追加するための設定
     def __init__(self, *args, **kwargs):
