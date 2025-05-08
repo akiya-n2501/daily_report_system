@@ -54,7 +54,7 @@ class EmployeeViewsUnitTest(TestCase):
             "department": "HR",
             "email": "newemployee@example.com",
             "username": "newuser",
-            "password": "newpassword",
+            "password": "newpassword01",
         }
         request = self.factory.post(reverse("employee_new"), data)
         request.user = self.staff_user
@@ -77,3 +77,81 @@ class EmployeeViewsUnitTest(TestCase):
         self.assertIn("kakikukeko", content)
         self.assertIn("HR", content)
         self.assertIn("False", content)  # is_staffがFalse
+
+
+# 従業員編集画面の単体テスト
+class EmployeeUpdateViewsUnitTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.staff_user = User.objects.create_user(
+            username="staff", password="password", is_staff=True
+        )
+        self.user = User.objects.create_user(
+            username="user1", password="testpass123", is_staff=True
+        )
+        self.employee = Employee.objects.create(
+            user=self.user, name="Alice", email="alice@example.com", department="HR"
+        )
+
+        self.url = reverse("employee_edit", kwargs={'pk': self.employee.pk})
+
+    # フォームの表示をテスト
+    def test_get_update_view(self):
+
+        self.client.login(username="staff", password="password")
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Alice")
+        self.assertContains(response, "alice@example.com")
+
+    # パスワードが空の場合のテスト
+    def test_post_update_view(self):
+        data = {
+            "name": "Bob",
+            "email": "bob@example.com",
+            "username": "newUser1",
+            "password": "",
+        }
+        self.client.login(username="staff", password="password")
+
+        response = self.client.post(self.url, data)
+        self.assertRedirects(response, reverse('employee_index'))
+
+        self.employee.refresh_from_db()
+        self.user.refresh_from_db()
+
+        self.assertEqual(self.employee.name, "Bob")
+        self.assertEqual(self.employee.email, "bob@example.com")
+        self.assertEqual(self.user.username, "newUser1")
+        self.assertTrue(self.user.check_password('testpass123'))
+
+    # パスワードが入力された場合のテスト
+    def test_post_update_view_with_password(self):
+        data = {
+            "name": "Bob",
+            "email": "bob@example.com",
+            "username": "newUser1",
+            "password": "newPassword01",
+        }
+        self.client.login(username="staff", password="password")
+
+        response = self.client.post(self.url, data)
+        self.assertRedirects(response, reverse('employee_index'))
+
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password('newPassword01'))
+
+    # パスワードが不適切な場合のテスト
+    def test_post_update_view_with_password(self):
+        data = {
+            "name": "Bob",
+            "email": "bob@example.com",
+            "username": "newUser1",
+            "password": "newPassword",
+        }
+        self.client.login(username="staff", password="password")
+
+        response = self.client.post(self.url, data)
+        self.assertContains(
+            response, "パスワードは英数字を含む8文字以上にしてください。"
+        )
