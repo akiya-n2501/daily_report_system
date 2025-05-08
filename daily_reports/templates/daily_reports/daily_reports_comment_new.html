@@ -5,17 +5,41 @@
 {% block content %}
 <h1>日報コメント登録フォーム</h1>
 
-投稿者：{{employee_name}} 日付:{{ reported_on|date:"Y/m/d" }}<p>
+<div class="container">
+  <div class="row">
+      <div class="col-md-6 d-flex align-items-center">
+          <strong>投稿者: </strong> <span class="ms-2">{{ employee_name }}</span>
+      </div>
+      <div class="col-md-6 text-md-end text-start">
+          <strong>日付: </strong> <span>{{ reported_on|date:"Y/m/d" }}</span>
+      </div>
+  </div>
 
-内容： {{job_description}}
+  <hr> <!-- 区切り線 -->
+
+  <div class="content mt-3">
+      <p><strong>内容:</strong></p>
+      <p class="formatted-text">{{ job_description|linebreaksbr }}</p>
+  </div>
+</div>
 
 <form method="post">
   {% csrf_token %}
   <div class="form-group">
     <label for="{{ form.comment.id_for_label }}">コメント:</label>
-    <p>
-    {{ form.comment }}
-</div>
-  <button type="submit">登録</button>
+    <textarea class="form-control" id="{{ form.comment.id_for_label }}" name="comment" rows="4" placeholder="コメントを入力してください">{{ form.comment.value }}</textarea>
+  </div>
+
+
+<!-- コメントフィールドのエラーメッセージを表示 -->
+{% if form.comment.errors %}
+    <div class="alert alert-danger">
+        {% for error in form.comment.errors %}
+            <p>{{ error }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+  <button type="submit" class="btn btn-primary mt-3">送信</button>
 </form>
 {% endblock content %}

@@ -1,12 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}トップページ{% endblock title %}
+
+{% block content %}
+
 {% if user.is_authenticated %}
 <h1>{{ user.username }}さん、ようこそ！</h1>
 <ul>
   {% if user.is_staff %}
-  <li><a href="{% url 'employee_index' %}">従業員管理（管理者専用）</a></li>
+  <li><a href="{% url 'employee_index' %}">従業員一覧</a></li>
   {% endif %}
+  <li><a href="{% url 'daily_report_index' %}">日報一覧</a></li>
   <li><a href="{% url 'logout' %}">ログアウト</a></li>
 </ul>
 {% else %}
 <h1>ログインしてください</h1>
 <a href="{% url 'login' %}">ログイン画面へ</a>
 {% endif %}
+{% endblock %}
