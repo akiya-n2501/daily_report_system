@@ -1,9 +1,5 @@
 from datetime import datetime
 
-from django.views.generic import CreateView, ListView
-from django.shortcuts import render
-from .forms import DailyReportForm
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -11,12 +7,12 @@ from django.utils.decorators import method_decorator
 from django.utils.timezone import make_aware
 from django.views.generic import CreateView, ListView
 
-from .forms import DailyReportCommentForm, DailyReportSearchForm
+from .forms import DailyReportCommentForm, DailyReportForm, DailyReportSearchForm
 from .models import DailyReport, DailyReportComment, Employee
 
 
 # 日報コメント新規作成画面
-@method_decorator(staff_member_required, name="dispatch")
+@method_decorator(login_required, name="dispatch")
 class DailyReportCommentCreateView(CreateView):
     model = DailyReportComment
     template_name = "daily_reports/daily_reports_comment_new.html"
@@ -62,18 +58,20 @@ class DailyReportListView(ListView):
         )
         return context
 
+
 # 日報新規登録
 @method_decorator(login_required, name="dispatch")
 class DailyReportCreateView(CreateView):
     model = DailyReport
     form_class = DailyReportForm
-    
+
     template_name = "daily_reports/daily_report_new.html"
 
     def get_success_url(self):
         return reverse(
             "daily_report_index",
         )
+
 
 # 日報検索
 @method_decorator(login_required, name="dispatch")
