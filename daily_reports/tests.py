@@ -80,7 +80,7 @@ class DailyReportCommentCreateViewUnitTest(TestCase):
             reported_on=datetime.date.today(),
         )
 
-    # employee_new
+    # 日報コメント新規作成のテスト
     def test_daily_report_comment_new_view_post_valid(self):
         data = {
             "comment": "これはコメントです。",
@@ -90,15 +90,14 @@ class DailyReportCommentCreateViewUnitTest(TestCase):
         )
         request = self.factory.post(url, data)
 
-        resolver_match = resolve(url)
-        request.resolver_match = resolver_match
-        request.resolver_match.kwargs["report_id"] = self.daily_report.pk
-
         request.user = self.user1
-        response = views.DailyReportCommentCreateView.as_view()(request)
+        response = views.DailyReportCommentCreateView.as_view()(
+            request, report_id=self.daily_report.pk
+        )
         # POSTが有効なら302が通るはず
         self.assertEqual(response.status_code, 302)
 
+    # 日報コメントが作られていることを確認するテスト
     def test_daily_report_comment_new_view_post_created(self):
         data = {
             "comment": "これはコメントです。",
@@ -108,12 +107,10 @@ class DailyReportCommentCreateViewUnitTest(TestCase):
         )
         request = self.factory.post(url, data)
 
-        resolver_match = resolve(url)
-        request.resolver_match = resolver_match
-        request.resolver_match.kwargs["report_id"] = self.daily_report.pk
-
         request.user = self.user1
-        response = views.DailyReportCommentCreateView.as_view()(request)
+        response = views.DailyReportCommentCreateView.as_view()(
+            request, report_id=self.daily_report.pk
+        )
 
         self.assertEqual(DailyReportComment.objects.count(), 1)
 
@@ -122,19 +119,14 @@ class DailyReportCommentCreateViewUnitTest(TestCase):
         self.assertEqual(comment.employee_code, self.employee)
         self.assertEqual(comment.daily_report_code, self.daily_report)
 
+    # 日報コメントのフォームが空の時のテスト
     def test_daily_report_comment_invalid_form(self):
         data = {"comment": ""}
         url = reverse(
             "daily_report_comment_new", kwargs={"report_id": self.daily_report.pk}
         )
-        request = self.factory.post(url, data)
-
-        resolver_match = resolve(url)
-        request.resolver_match = resolver_match
-        request.resolver_match.kwargs["report_id"] = self.daily_report.pk
-
-        request.user = self.user1
-        response = views.DailyReportCommentCreateView.as_view()(request)
+        self.client.login(username="testuser", password="password")
+        response = self.client.post(url, data)
 
         self.assertEqual(response.status_code, 200)
 
@@ -163,7 +155,7 @@ class DailyReportListViewTest(TestCase):
 
         content = response.content.decode("utf-8")
 
-        self.assertIn("2025/05/07", content)
+        self.assertIn(datetime.date.today().strftime("%Y/%m/%d"), content)
         # 従業員名
         self.assertIn(self.daily_report.employee_code.name, content)
         # 先頭10文字
