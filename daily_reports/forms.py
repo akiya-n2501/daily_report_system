@@ -53,6 +53,8 @@ class DailyReportSearchForm(forms.Form):
     )
     keyword = forms.CharField(required=False, label="キーワード")
 
+
+# 日報新規登録画面
 class DailyReportForm(forms.ModelForm):
 
     class Meta:
@@ -76,3 +78,5 @@ class DailyReportForm(forms.ModelForm):
         if commit:
             daily_report.save()
         return daily_report
+    
+    
