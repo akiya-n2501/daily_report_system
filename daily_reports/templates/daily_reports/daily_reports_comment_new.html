@@ -5,9 +5,23 @@
 {% block content %}
 <h1>日報コメント登録フォーム</h1>
 
-投稿者：{{employee_name}} 日付:{{ reported_on|date:"Y/m/d" }}<p>
+<div class="container">
+  <div class="row">
+      <div class="col-md-6 d-flex align-items-center">
+          <strong>投稿者: </strong> <span class="ms-2">{{ employee_name }}</span>
+      </div>
+      <div class="col-md-6 text-md-end text-start">
+          <strong>日付: </strong> <span>{{ reported_on|date:"Y/m/d" }}</span>
+      </div>
+  </div>
 
-内容： {{job_description}}
+  <hr> <!-- 区切り線 -->
+
+  <div class="content mt-3">
+      <p><strong>内容:</strong></p>
+      <p class="formatted-text">{{ job_description|linebreaksbr }}</p>
+  </div>
+</div>
 
 <form method="post">
   {% csrf_token %}
