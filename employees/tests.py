@@ -131,7 +131,7 @@ class EmployeeUpdateViewsUnitTest(TestCase):
             "name": "Bob",
             "email": "bob@example.com",
             "username": "newUser1",
-            "password": "newPassword",
+            "password": "newPassword01",
         }
         self.client.login(username="staff", password="password")
 
@@ -139,4 +139,4 @@ class EmployeeUpdateViewsUnitTest(TestCase):
         self.assertRedirects(response, reverse('employee_index'))
 
         self.user.refresh_from_db()
-        self.assertTrue(self.user.check_password('newPassword'))
+        self.assertTrue(self.user.check_password('newPassword01'))

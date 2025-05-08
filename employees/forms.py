@@ -1,12 +1,24 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
 
 from .models import Employee
 
 
+# パスワード用のバリデーション regex: 正規表現
+password_validator = RegexValidator(
+    regex=r"^(?=.*[a-zA-Z])(?=.*\d).{8,}$",
+    message="パスワードは英数字を含む8文字以上にしてください。",
+)
+
+
 class EmployeeUserForm(forms.ModelForm):
     username = forms.CharField(max_length=50, required=True)
-    password = forms.CharField(widget=forms.PasswordInput, required=True)
+    password = forms.CharField(
+        widget=forms.PasswordInput,
+        required=True,
+        validators=[password_validator],  # バリデーション適用
+    )
 
     class Meta:
         model = Employee
@@ -25,7 +37,11 @@ class EmployeeUserForm(forms.ModelForm):
 
 class EmployeeUserEditForm(forms.ModelForm):
     username = forms.CharField(max_length=50, required=True)
-    password = forms.CharField(widget=forms.PasswordInput, required=False)
+    password = forms.CharField(
+        widget=forms.PasswordInput,
+        required=False,
+        validators=[password_validator],  # バリデーション適用
+    )
 
     class Meta:
         model = Employee
