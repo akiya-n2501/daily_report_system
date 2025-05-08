@@ -6,12 +6,8 @@ from django.views.generic import ListView, UpdateView
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
-from .forms import EmployeeUserForm
+from .forms import EmployeeUserForm, EmployeeUserEditForm
 from .models import Employee
-
-
-# def home(request):
-#     return render(request, "home.html")
 
 
 @login_required
@@ -40,52 +36,20 @@ class EmployeeListView(ListView):
         return context
 
 
+@method_decorator(login_required, name="dispatch")
 @method_decorator(staff_member_required, name="dispatch")
 class EmployeeUpdateView(UpdateView):
     model = Employee
     template_name = "employees/employee_form_edit.html"
-    form_class = EmployeeUserForm
-    success_url = reverse_lazy('employees:employee_edit')
+    form_class = EmployeeUserEditForm
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["user"] = User.objects.select_related("user").values("is_staff")
-        return context
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user_instance'] = self.get_object().user
+        return kwargs
 
-
-# TODO Email, Username, Passwordを変更可能にする。
-# @staff_member_required
-# def employee_edit(request, pk):
-#     employee = get_object_or_404(Employee, pk=pk)
-#     return render(request, "employees/employee_edit.html", {"employee": employee})
-
-
-# @staff_member_required
-# def employee_update(request, pk):
-#     employee = get_object_or_404(Employee, pk=pk)
-#     if request.method == "POST":
-#         employee.name = request.POST["name"]
-#         employee.email = request.POST["email"]
-#         employee.save()
-#         return redirect("employee_index")
-#     return redirect("employee_edit", pk=pk)
-@login_required
-@staff_member_required
-def employee_edit(request, pk):
-    employee = get_object_or_404(Employee, pk=pk)
-    return render(request, "employees/employee_edit.html", {"employee": employee})
-
-
-@login_required
-@staff_member_required
-def employee_update(request, pk):
-    employee = get_object_or_404(Employee, pk=pk)
-    if request.method == "POST":
-        employee.name = request.POST["name"]
-        employee.email = request.POST["email"]
-        employee.save()
-        return redirect("employee_index")
-    return redirect("employee_edit", pk=pk)
+    def get_success_url(self):
+        return reverse('employee_index')
 
 
 @login_required

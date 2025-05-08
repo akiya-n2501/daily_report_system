@@ -5,7 +5,8 @@
 {% block content %}
 <h1>従業員編集フォーム</h1>
 <form method="post">
-  {% csrf_token %} {{ form.as_p }}
+  {% csrf_token %}
+  {{ form.as_p }}
   <button type="submit">更新</button>
 </form>
 {% endblock content %}
