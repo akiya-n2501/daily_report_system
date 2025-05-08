@@ -1,10 +1,10 @@
 from django.urls import path
 
 from . import views
-# from .views import DailyReportCreateview
+
+from .views import DailyReportListView, DailyReportCreateView
 
 urlpatterns = [
-    # path("new/",DailyReportCreateview.as_view(),name="daily_report_new"),
-    # 候補　name = ("dairy_report_create")
-    path("new/", views.daily_report_new, name="daily_report_new"),
+    path("", DailyReportListView.as_view(), name="daily_report_index"),
+    path("new/", DailyReportCreateView.as_view(),name="daily_report_new"),
 ]

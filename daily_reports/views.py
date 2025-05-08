@@ -1,14 +1,27 @@
-from django.views.generic import CreateView
-from .models import DailyReport
+from django.views.generic import CreateView, ListView
 from django.shortcuts import render
+from .forms import DailyReportForm
 
-# Create your views here.
-# class DailyReportCreateView(CreateView):
-    # model = DailyReport
-    # fields = ["job_description","reported_on"]
-    # # created_atは必要か
-    # template_name = "daily_repots/daily_reports_new.html"
+from .models import DailyReport, Employee
 
-def daily_report_new(request):
 
-    return render(request, "daily_reports/daily_report_new.html" )
+# 日報一覧
+class DailyReportListView(ListView):
+    model = DailyReport
+    template_name = "daily_reports/daily_report_list.html"
+    context_object_name = "daily_reports"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["employee"] = Employee.objects.select_related("employee_code").values(
+            "name"
+        )
+        return context
+    
+class DailyReportCreateView(CreateView):
+    model = DailyReport
+    form_class = DailyReportForm
+    
+    template_name = "daily_reports/daily_report_new.html"
+    success_url = "/"
+# success_url 変更する必要あり

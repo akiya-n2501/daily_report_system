@@ -1,8 +1,11 @@
+import datetime
+
 from django.test import TestCase
-from .models import DailyReportComment, DailyReport
+from django.urls import reverse
+
 from employees.models import Employee, User
 
-import datetime
+from .models import DailyReport, DailyReportComment
 
 
 class DailyReportTest(TestCase):
@@ -51,3 +54,34 @@ class DailyReportCommentTest(TestCase):
             str(daily_report_comment),
             f"Commenter: Bob, Employee: Alice, Date: {datetime.date.today()}, Comment: これはコメント, CreatedAt: {daily_report_comment.created_at}, UpdatedAt: {daily_report_comment.updated_at}",
         )
+
+
+# 日報一覧画面の単体テスト
+class DailyReportListViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="testuser", password="password")
+        self.employee = Employee.objects.create(
+            name="Alice", email="alice@example.com", department="HR", user=self.user
+        )
+        self.daily_report = DailyReport.objects.create(
+            reported_on=datetime.date.today(),
+            employee_code=self.employee,
+            job_description="""
+            所感
+            ・コードレビューのときのLGTM等の用語について学んだので、実行する。
+            ・チーム開発のGit/GitHubの運用ルールが無くて苦労したので、次回作成する。
+            """,
+        )
+
+    def test_daily_report_list_view(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("daily_report_index"))
+        self.assertEqual(response.status_code, 200)
+
+        content = response.content.decode("utf-8")
+
+        self.assertIn("2025/05/07", content)
+        # 従業員名
+        self.assertIn(self.daily_report.employee_code.name, content)
+        # 先頭10文字
+        self.assertIn(self.daily_report.job_description[:10], content)
