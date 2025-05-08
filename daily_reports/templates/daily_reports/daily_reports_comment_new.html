@@ -27,7 +27,7 @@
   {% csrf_token %}
   <div class="form-group">
     <label for="{{ form.comment.id_for_label }}">コメント:</label>
-    <textarea class="form-control" name="comment" rows="4" placeholder="コメントを入力してください">{{ form.comment.value }}</textarea>
+    <textarea class="form-control" id="{{ form.comment.id_for_label }}" name="comment" rows="4" placeholder="コメントを入力してください">{{ form.comment.value }}</textarea>
   </div>
 
 
