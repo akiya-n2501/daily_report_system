@@ -1,17 +1,9 @@
 from django.shortcuts import render
-from django.views.generic import UpdateView
+from django.views.generic import ListView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import DailyReport
+from .models import DailyReport, Employee
 from django.urls import reverse_lazy
 from .forms import DailyReportForm
-
-class DailyReportEditView(LoginRequiredMixin, UpdateView):
-    model = DailyReport
-    form_class = DailyReportForm
-    template_name = 'daily_reports/daily_report_edit.html'
-from django.views.generic import ListView
-
-from .models import DailyReport, Employee
 
 
 # 日報一覧
@@ -26,6 +18,12 @@ class DailyReportListView(ListView):
             "name"
         )
         return context
+
+# 日報の編集
+class DailyReportEditView(LoginRequiredMixin, UpdateView):
+    model = DailyReport
+    form_class = DailyReportForm
+    template_name = 'daily_reports/daily_report_edit.html'
 
     success_url = reverse_lazy('daily_reports:daily_report_detail')
     def get_context_data(self, **kwargs):
