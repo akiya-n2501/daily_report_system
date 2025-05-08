@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}従業員登録{% endblock title %}
+{% block title %}従業員編集{% endblock title %}
 
 {% block content %}
-<h1>従業員登録フォーム</h1>
+<h1>従業員編集フォーム</h1>
 <form method="post">
   {% csrf_token %}
   <div class="form-group">
-    <table class="table">
+    <table>
       <tbody>
         {% for field in form %}
         <tr>
@@ -19,16 +19,17 @@
         {% endfor %}
       </tbody>
     </table>
+
 <!-- パスワードフィールドのエラーメッセージを表示 -->
 {% if form.password.errors %}
-<div class="alert alert-danger">
-    {% for error in form.password.errors %}
-        <p>{{ error }}</p>
-    {% endfor %}
-</div>
+    <div class="alert alert-danger">
+        {% for error in form.password.errors %}
+            <p>{{ error }}</p>
+        {% endfor %}
+    </div>
 {% endif %}
   </div>
 
-  <button type="submit" class="btn btn-primary mt-3">登録</button>
+  <button type="submit" class="btn btn-primary mt-3">更新</button>
 </form>
 {% endblock content %}
