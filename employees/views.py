@@ -43,11 +43,13 @@ class EmployeeUpdateView(UpdateView):
     template_name = "employees/employee_form_edit.html"
     form_class = EmployeeUserEditForm
 
+    # Userをformのインスタンスに渡すための関数
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['user_instance'] = self.get_object().user
         return kwargs
 
+    # 成功時のurl
     def get_success_url(self):
         return reverse('employee_index')
 

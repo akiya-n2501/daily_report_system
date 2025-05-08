@@ -104,7 +104,7 @@ class EmployeeUpdateViewsUnitTest(TestCase):
         self.assertContains(response, "Alice")
         self.assertContains(response, "alice@example.com")
 
-    # パスワードが空の場合をテスト
+    # パスワードが空の場合のテスト
     def test_post_update_view(self):
         data = {
             "name": "Bob",
@@ -125,7 +125,7 @@ class EmployeeUpdateViewsUnitTest(TestCase):
         self.assertEqual(self.user.username, "newUser1")
         self.assertTrue(self.user.check_password('testpass123'))
 
-    # パスワードが入力された場合をテスト
+    # パスワードが入力された場合のテスト
     def test_post_update_view_with_password(self):
         data = {
             "name": "Bob",
@@ -141,6 +141,7 @@ class EmployeeUpdateViewsUnitTest(TestCase):
         self.user.refresh_from_db()
         self.assertTrue(self.user.check_password('newPassword01'))
 
+    # パスワードが不適切な場合のテスト
     def test_post_update_view_with_password(self):
         data = {
             "name": "Bob",

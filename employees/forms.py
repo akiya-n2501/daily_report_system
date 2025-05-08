@@ -47,6 +47,7 @@ class EmployeeUserEditForm(forms.ModelForm):
         model = Employee
         fields = ["name", "email", "department", "username", "password"]
 
+    # userをformのインスタンスに追加するための設定
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user_instance', None)
         super().__init__(*args, **kwargs)
@@ -59,6 +60,8 @@ class EmployeeUserEditForm(forms.ModelForm):
         user = employee.user
         user.username = self.cleaned_data["username"]
         password = self.cleaned_data["password"]
+
+        # パスワードが空の場合はパスワードを更新しない
         if password:
             user.set_password(password)
         if commit:
