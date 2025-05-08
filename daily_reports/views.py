@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView
+from django.views.generic import FormView, ListView
 
+from .forms import DailyReportSearchForm
 from .models import DailyReport, Employee
 
 
@@ -28,8 +29,9 @@ class DailyReportSearchView(ListView):
     context_object_name = "daily_reports"
 
     def get_queryset(self):
-        # 検索
         query = self.request.GET.get("q", None)
+
+        # 検索
         if query:
             results = DailyReport.objects.filter(
                 Q(job_description__icontains=query)
@@ -37,24 +39,6 @@ class DailyReportSearchView(ListView):
             )
         else:
             results = DailyReport.objects.all()
-
-        # 日付範囲
-        date_min = self.request.GET.get("date_min")
-        date_max = self.request.GET.get("date_max")
-        if date_min and date_max:
-            results = DailyReport.objects.filter(
-                reported_on__range=[date_min, date_max]
-            ).order_by("reported_on")
-        elif date_min:
-            results = DailyReport.objects.filter(reported_on__gte=date_min).order_by(
-                "reported_on"
-            )
-        elif date_max:
-            results = DailyReport.objects.filter(reported_on__lte=date_max).order_by(
-                "reported_on"
-            )
-        else:
-            results = DailyReport.objects.filter(reported_on__isnull=True)
 
         return results
 

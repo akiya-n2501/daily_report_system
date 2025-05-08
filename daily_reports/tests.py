@@ -74,14 +74,45 @@ class DailyReportListViewTest(TestCase):
         )
 
     def test_daily_report_list_view(self):
+        # ログイン
         self.client.force_login(self.user)
         response = self.client.get(reverse("daily_report_index"))
         self.assertEqual(response.status_code, 200)
 
         content = response.content.decode("utf-8")
 
-        self.assertIn("2025/05/07", content)
+        self.assertIn(datetime.date.today().strftime("%Y/%m/%d"), content)
         # 従業員名
         self.assertIn(self.daily_report.employee_code.name, content)
         # 先頭10文字
         self.assertIn(self.daily_report.job_description[:10], content)
+
+
+# 日報一覧画面の検索機能のテスト
+class DailyReportSearchViewTest(TestCase):
+    def setUp(self):
+        self.user1 = User.objects.create_user(username="testuser1", password="password")
+        self.employee1 = Employee.objects.create(
+            name="Alice", email="alice@example.com", department="HR", user=self.user1
+        )
+        DailyReport.objects.create(
+            reported_on=datetime.date.today(),
+            employee_code=self.employee1,
+            job_description="LGTM",
+        )
+        self.user2 = User.objects.create_user(username="testuser2", password="password")
+        self.employee2 = Employee.objects.create(
+            name="Alice2", email="alice2@example.com", department="HR2", user=self.user2
+        )
+        DailyReport.objects.create(
+            reported_on=datetime.date.today(),
+            employee_code=self.employee2,
+            job_description="Sharingday",
+        )
+
+    def test_daily_report_search(self):
+        self.client.force_login(self.user1)
+        response = self.client.get(reverse("search_list"), {"q": "LGTM"})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "LGTM")
+        self.assertNotContains(response, "Sharingday")
