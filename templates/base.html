@@ -9,7 +9,7 @@
     {% comment %} ナビゲーションバー {% endcomment %}
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container">
-        <a class="navbar-brand" href="{% url 'home' %}">日報管理システム</a>
+        <a class="navbar-brand" href="{% url 'daily_report_index' %}">日報管理システム</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -24,13 +24,18 @@
             <li class="nav-item">
               <a class="nav-link">{{ user.username }}</a>
             </li>
-            {% if user.is_staff %}
+              {% if user.is_staff %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'employee_index' %}"
+                 >従業員管理</a
+                >
+              </li>
+              {% endif %}
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'employee_index' %}"
-                >従業員管理</a
+              <a class="nav-link" href="{% url 'daily_report_index' %}"
+                >日報管理</a
               >
             </li>
-            {% endif %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'logout' %}">ログアウト</a>
             </li>

@@ -3,15 +3,17 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView
+from django.contrib.auth.decorators import login_required
 
 from .forms import EmployeeUserForm
 from .models import Employee
 
 
-def home(request):
-    return render(request, "home.html")
+# def home(request):
+#     return render(request, "home.html")
 
 
+@login_required
 @staff_member_required
 def employee_new(request):
     if request.method == "POST":
@@ -24,6 +26,7 @@ def employee_new(request):
     return render(request, "employees/employee_form.html", {"form": form})
 
 
+@method_decorator(login_required, name="dispatch")
 @method_decorator(staff_member_required, name="dispatch")
 class EmployeeListView(ListView):
     model = Employee
@@ -32,17 +35,19 @@ class EmployeeListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["user"] = User.objects.select_related("user").values("is_staff")
+        context["user"] = self.request.user
         return context
 
 
 # TODO Email, Username, Passwordを変更可能にする。
+@login_required
 @staff_member_required
 def employee_edit(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
     return render(request, "employees/employee_edit.html", {"employee": employee})
 
 
+@login_required
 @staff_member_required
 def employee_update(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
@@ -54,6 +59,7 @@ def employee_update(request, pk):
     return redirect("employee_edit", pk=pk)
 
 
+@login_required
 @staff_member_required
 def employee_delete_confirm(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
@@ -62,6 +68,7 @@ def employee_delete_confirm(request, pk):
     )
 
 
+@login_required
 @staff_member_required
 def employee_delete(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
