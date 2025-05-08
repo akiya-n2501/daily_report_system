@@ -1,8 +1,46 @@
 from django import forms
 
-from .models import DailyReport
+from .models import DailyReportComment,DailyReport
 
 
+class DailyReportCommentForm(forms.ModelForm):
+    comment = forms.CharField(
+        required=False,  # Django の標準必須バリデーションを無効化
+        widget=forms.Textarea(attrs={"placeholder": "コメントを入力してください"}),
+    )
+
+    class Meta:
+        model = DailyReportComment
+        fields = ["comment"]
+
+    # 外部からemployeeとdaily_reportをフォームのインスタンスから受け取れる設定
+    def __init__(self, *args, **kwargs):
+        self.employee = kwargs.pop("employee", None)
+        self.daily_report = kwargs.pop("daily_report", None)
+        super().__init__(*args, **kwargs)
+
+    # コメントの文字数のバリデーション
+    def clean_comment(self):
+        comment = self.cleaned_data.get("comment", "").strip()  # 前後の空白を削除
+        length = len(comment)
+        if length < 1:
+            raise forms.ValidationError("コメントは1文字以上で入力してください。")
+        if length > 2000:
+            raise forms.ValidationError(
+                f"コメントは2000文字以内で入力してください。（現在の文字数: {length}）"
+            )
+        return comment
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if self.employee:
+            instance.employee_code = self.employee
+        if self.daily_report:
+            instance.daily_report_code = self.daily_report
+        if commit:
+            instance.save()
+        return instance
+    
 class DailyReportForm(forms.ModelForm):
 
     class Meta:
@@ -12,8 +50,8 @@ class DailyReportForm(forms.ModelForm):
                   "job_description": "業務内容",
                   "reported_on": "日付",
                   }
-    
-    
+
+
     # def clean_job_description(self):
     #      job_description = self.cleaned_data.get("job_description")
     #      if len(job_description) > 2000:
