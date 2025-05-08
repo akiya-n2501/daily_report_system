@@ -1,4 +1,5 @@
 from django import forms
+
 from .models import DailyReportComment
 
 
@@ -10,17 +11,17 @@ class DailyReportCommentForm(forms.ModelForm):
 
     class Meta:
         model = DailyReportComment
-        fields = ['comment']
+        fields = ["comment"]
 
     # 外部からemployeeとdaily_reportをフォームのインスタンスから受け取れる設定
     def __init__(self, *args, **kwargs):
-        self.employee = kwargs.pop('employee', None)
-        self.daily_report = kwargs.pop('daily_report', None)
+        self.employee = kwargs.pop("employee", None)
+        self.daily_report = kwargs.pop("daily_report", None)
         super().__init__(*args, **kwargs)
 
     # コメントの文字数のバリデーション
     def clean_comment(self):
-        comment = self.cleaned_data.get('comment', "").strip()  # 前後の空白を削除
+        comment = self.cleaned_data.get("comment", "").strip()  # 前後の空白を削除
         length = len(comment)
         if length < 1:
             raise forms.ValidationError("コメントは1文字以上で入力してください。")

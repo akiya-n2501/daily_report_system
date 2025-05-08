@@ -1,8 +1,10 @@
 from django.urls import path
 
-from . import views
-from .views import DailyReportCommentCreateView
-from .views import DailyReportListView
+from .views import (
+    DailyReportCommentCreateView,
+    DailyReportListView,
+    DailyReportSearchView,
+)
 
 urlpatterns = [
     path(
@@ -16,4 +18,5 @@ urlpatterns = [
         name="daily_report_detail",
     ),
     path("", DailyReportListView.as_view(), name="daily_report_index"),
+    path("search_list/", DailyReportSearchView.as_view(), name="search_list"),
 ]

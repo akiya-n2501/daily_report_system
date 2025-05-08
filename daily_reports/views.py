@@ -1,12 +1,13 @@
 from django.contrib.admin.views.decorators import staff_member_required
-from django.shortcuts import get_object_or_404, redirect, render
-from django.utils.decorators import method_decorator
-from django.views.generic import CreateView
-from django.views.generic import ListView
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from employees.models import Employee
-from .models import DailyReport, DailyReportComment
+from django.utils.decorators import method_decorator
+from django.views.generic import CreateView, ListView
+
 from .forms import DailyReportCommentForm
+from .models import DailyReport, DailyReportComment, Employee
 
 
 # 日報コメント新規作成画面
@@ -43,10 +44,40 @@ class DailyReportCommentCreateView(CreateView):
 
 
 # 日報一覧
+@method_decorator(login_required, name="dispatch")
 class DailyReportListView(ListView):
     model = DailyReport
     template_name = "daily_reports/daily_report_list.html"
     context_object_name = "daily_reports"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["employee"] = Employee.objects.select_related("employee_code").values(
+            "name"
+        )
+        return context
+
+
+# 日報検索
+@method_decorator(login_required, name="dispatch")
+class DailyReportSearchView(ListView):
+    model = DailyReport
+    template_name = "daily_reports/daily_report_list.html"
+    context_object_name = "daily_reports"
+
+    def get_queryset(self):
+        query = self.request.GET.get("q", None)
+
+        # 検索
+        if query:
+            results = DailyReport.objects.filter(
+                Q(job_description__icontains=query)
+                | Q(employee_code__name__icontains=query)
+            )
+        else:
+            results = DailyReport.objects.all()
+
+        return results
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
