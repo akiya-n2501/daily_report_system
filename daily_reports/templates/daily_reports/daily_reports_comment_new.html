@@ -27,9 +27,9 @@
   {% csrf_token %}
   <div class="form-group">
     <label for="{{ form.comment.id_for_label }}">コメント:</label>
-    <p>
-    {{ form.comment }}
-</div>
+    <textarea class="form-control" name="comment" rows="4" placeholder="コメントを入力してください">{{ form.comment.value }}</textarea>
+  </div>
+
 
 <!-- コメントフィールドのエラーメッセージを表示 -->
 {% if form.comment.errors %}
@@ -40,6 +40,6 @@
     </div>
 {% endif %}
 
-  <button type="submit">登録</button>
+  <button type="submit" class="btn btn-primary mt-3">送信</button>
 </form>
 {% endblock content %}

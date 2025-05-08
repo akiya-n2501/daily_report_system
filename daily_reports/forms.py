@@ -21,10 +21,13 @@ class DailyReportCommentForm(forms.ModelForm):
     # コメントの文字数のバリデーション
     def clean_comment(self):
         comment = self.cleaned_data.get('comment', "").strip()  # 前後の空白を削除
-        if len(comment) < 1:
+        length = len(comment)
+        if length < 1:
             raise forms.ValidationError("コメントは1文字以上で入力してください。")
-        if len(comment) > 2000:
-            raise forms.ValidationError("コメントは2000文字以内で入力してください。")
+        if length > 2000:
+            raise forms.ValidationError(
+                f"コメントは2000文字以内で入力してください。（現在の文字数: {length}）"
+            )
         return comment
 
     def save(self, commit=True):

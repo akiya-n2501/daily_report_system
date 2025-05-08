@@ -20,10 +20,12 @@ class DailyReportCommentCreateView(CreateView):
         daily_report = get_object_or_404(DailyReport, id=self.kwargs.get("report_id"))
         employee = Employee.objects.get(user=self.request.user)
 
+        # formのインスタンスにemployeeとdaily_reportを設定
         form.instance.employee_code = employee
         form.instance.daily_report_code = daily_report
         return super().form_valid(form)
 
+    # テンプレートで利用するためのコンテキストの設定
     def get_context_data(self, **kwargs):
         daily_report = get_object_or_404(DailyReport, id=self.kwargs.get("report_id"))
 
@@ -33,6 +35,7 @@ class DailyReportCommentCreateView(CreateView):
         context["job_description"] = daily_report.job_description
         return context
 
+    # 成功時のURLをpkから設定
     def get_success_url(self):
         return reverse(
             "daily_report_detail", kwargs={"report_id": self.kwargs.get("report_id")}
