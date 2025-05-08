@@ -1,14 +1,12 @@
 import datetime
 
 from django.test import TestCase
-from django.urls import reverse
+from django.test.client import RequestFactory
+from django.urls import resolve, reverse
 
 from employees.models import Employee, User
-from django.test.client import RequestFactory
-from django.urls import reverse, resolve
 
 from . import views
-
 from .models import DailyReport, DailyReportComment
 
 
@@ -172,7 +170,7 @@ class DailyReportSearchViewTest(TestCase):
             name="Alice", email="alice@example.com", department="HR", user=self.user1
         )
         DailyReport.objects.create(
-            reported_on=datetime.date.today(),
+            reported_on="2010-01-01",
             employee_code=self.employee1,
             job_description="LGTM",
         )
@@ -181,14 +179,30 @@ class DailyReportSearchViewTest(TestCase):
             name="Alice2", email="alice2@example.com", department="HR2", user=self.user2
         )
         DailyReport.objects.create(
-            reported_on=datetime.date.today(),
+            reported_on="2025-05-08",
             employee_code=self.employee2,
             job_description="Sharingday",
         )
+        self.user3 = User.objects.create_user(username="testuser3", password="password")
+        self.employee3 = Employee.objects.create(
+            name="Alice3", email="alice3@example.com", department="HR3", user=self.user3
+        )
+        DailyReport.objects.create(
+            reported_on="2025-05-08",
+            employee_code=self.employee3,
+            job_description="Bunquet",
+        )
 
-    def test_daily_report_search(self):
+    def test_daily_report_search_without_login(self):
+        # ログインしていない時にリダイレクトされるか
+        response = self.client.get(reverse("search_list"), {"keyword": "LGTM"})
+        self.assertEqual(response.status_code, 302)
+
+    def test_daily_report_search_with_employee_name(self):
+        # 名前を検索し、含まれるべき日報が含まれるか
         self.client.force_login(self.user1)
-        response = self.client.get(reverse("search_list"), {"q": "LGTM"})
+        response = self.client.get(reverse("search_list"), {"keyword": "Alice1"})
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "LGTM")
-        self.assertNotContains(response, "Sharingday")
+        self.assertContains(response, "Alice1")
+        self.assertNotContains(response, "Alice2")
+        self.assertNotContains(response, "Alice3")
