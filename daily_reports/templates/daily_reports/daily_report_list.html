@@ -6,9 +6,23 @@
 
 <h1>日報一覧</h1>
 {% comment %} 日報新規作成ボタン {% endcomment %}
-<a href="">
-  <button type="submit">新規作成</button>
-</a>
+<div class="d-flex justify-content-end">
+  <a href="">
+    <button type="submit" class="btn btn-primary float-right">新規作成</button>
+    <p></p>
+  </a>
+</div>
+{% comment %} 検索バー {% endcomment %}
+<form class="form-inline my-2 my-lg-0" action="{% url 'search_list' %}" method="GET">
+  {% csrf_token %}
+  <div class="input-group">
+    <input type="text" name="q", class="form-control mr-sm-2" value="{{ request.GET.q }}" placeholder="検索">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">検索</button>
+  </div>
+</form>
+{% comment %} 日付範囲指定 {% endcomment %}
+<form class="form-inline" action="{% url 'search_list' %}"></form>
+{% comment %} 日報リスト {% endcomment %}
 <table class="table table-striped">
   <thead>
     <tr>
