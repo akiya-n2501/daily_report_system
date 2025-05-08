@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import DailyReportComment,DailyReport
+from .models import DailyReportComment, DailyReport
 
 
 # 日報コメントフォーム
