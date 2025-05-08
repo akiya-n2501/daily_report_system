@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -13,7 +12,7 @@ from .models import DailyReport, DailyReportComment, Employee
 
 
 # 日報コメント新規作成画面
-@method_decorator(staff_member_required, name="dispatch")
+@method_decorator(login_required, name="dispatch")
 class DailyReportCommentCreateView(CreateView):
     model = DailyReportComment
     template_name = "daily_reports/daily_reports_comment_new.html"
