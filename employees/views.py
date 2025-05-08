@@ -10,6 +10,7 @@ from .forms import EmployeeUserForm, EmployeeUserEditForm
 from .models import Employee
 
 
+# 先にログイン画面に飛ばすため冗長ですがlogin_requiredをつけています。
 @login_required
 @staff_member_required
 def employee_new(request):

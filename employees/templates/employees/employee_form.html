@@ -5,7 +5,25 @@
 {% block content %}
 <h1>従業員登録フォーム</h1>
 <form method="post">
-  {% csrf_token %} {{ form.as_p }}
-  <button type="submit">登録</button>
+  {% csrf_token %}
+  <div class="form-group">
+    <table class="table">
+      <tbody>
+        {% for field in form %}
+        <tr>
+          <th>{{ field.label_tag }}</th>  <!-- ラベル -->
+          <td>
+            {{ field }}  <!-- 入力欄 -->
+            {% if field.errors %}
+            <div class="text-danger">{{ field.errors }}</div>  <!-- 下にエラー表示 -->
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <button type="submit" class="btn btn-primary mt-3">登録</button>
 </form>
 {% endblock content %}
