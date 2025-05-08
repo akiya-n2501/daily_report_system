@@ -4,6 +4,10 @@ from django.test import TestCase
 from django.urls import reverse
 
 from employees.models import Employee, User
+from django.test.client import RequestFactory
+from django.urls import reverse, resolve
+
+from . import views
 
 from .models import DailyReport, DailyReportComment
 
@@ -56,6 +60,78 @@ class DailyReportCommentTest(TestCase):
         )
 
 
+# 日報コメント新規作成画面のテスト
+class DailyReportCommentCreateViewUnitTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user1 = User.objects.create_user(
+            username="testuser", password="password", is_staff=True
+        )
+        self.user2 = User.objects.create_user(username="testuser2", password="password")
+        self.employee = Employee.objects.create(
+            name="Alice", email="alice@example.com", department="HR", user=self.user1
+        )
+        self.manager = Employee.objects.create(
+            name="Bob", email="Bob@example.com", department="HR", user=self.user2
+        )
+        self.daily_report = DailyReport.objects.create(
+            employee_code=self.employee,
+            job_description="これは業務内容です。",
+            reported_on=datetime.date.today(),
+        )
+
+    # 日報コメント新規作成のテスト
+    def test_daily_report_comment_new_view_post_valid(self):
+        data = {
+            "comment": "これはコメントです。",
+        }
+        url = reverse(
+            "daily_report_comment_new", kwargs={"report_id": self.daily_report.pk}
+        )
+        request = self.factory.post(url, data)
+
+        request.user = self.user1
+        response = views.DailyReportCommentCreateView.as_view()(
+            request, report_id=self.daily_report.pk
+        )
+        # POSTが有効なら302が通るはず
+        self.assertEqual(response.status_code, 302)
+
+    # 日報コメントが作られていることを確認するテスト
+    def test_daily_report_comment_new_view_post_created(self):
+        data = {
+            "comment": "これはコメントです。",
+        }
+        url = reverse(
+            "daily_report_comment_new", kwargs={"report_id": self.daily_report.pk}
+        )
+        request = self.factory.post(url, data)
+
+        request.user = self.user1
+        response = views.DailyReportCommentCreateView.as_view()(
+            request, report_id=self.daily_report.pk
+        )
+
+        self.assertEqual(DailyReportComment.objects.count(), 1)
+
+        comment = DailyReportComment.objects.first()
+        self.assertEqual(comment.comment, "これはコメントです。")
+        self.assertEqual(comment.employee_code, self.employee)
+        self.assertEqual(comment.daily_report_code, self.daily_report)
+
+    # 日報コメントのフォームが空の時のテスト
+    def test_daily_report_comment_invalid_form(self):
+        data = {"comment": ""}
+        url = reverse(
+            "daily_report_comment_new", kwargs={"report_id": self.daily_report.pk}
+        )
+        self.client.login(username="testuser", password="password")
+        response = self.client.post(url, data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "コメントは1文字以上で入力してください。")
+
+
 # 日報一覧画面の単体テスト
 class DailyReportListViewTest(TestCase):
     def setUp(self):
@@ -80,7 +156,7 @@ class DailyReportListViewTest(TestCase):
 
         content = response.content.decode("utf-8")
 
-        self.assertIn("2025/05/07", content)
+        self.assertIn(datetime.date.today().strftime("%Y/%m/%d"), content)
         # 従業員名
         self.assertIn(self.daily_report.employee_code.name, content)
         # 先頭10文字
