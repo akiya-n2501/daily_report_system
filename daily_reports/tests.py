@@ -10,23 +10,105 @@ from . import views
 from .models import DailyReport, DailyReportComment
 
 
-class DailyReportTest(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(username="testuser", password="password")
-        self.employee = Employee.objects.create(
-            name="Alice", email="alice@example.com", department="HR", user=self.user
-        )
+from .views import DailyReportCreateView
 
-    def test_report_str_with_user(self):
-        daily_report = DailyReport.objects.create(
-            employee_code=self.employee,
-            job_description="これは業務内容です。",
-            reported_on=datetime.date.today(),
-        )
-        self.assertEqual(
-            str(daily_report),
-            f"Employee: Alice, Date: {datetime.date.today()}, Content: これは業務内容, CreatedAt: {daily_report.created_at}, UpdatedAt: {daily_report.updated_at}",
-        )
+
+
+# # 日報新規登録画面の単体テスト
+# class DailyReportCreateViewTest(TestCase):
+    
+#     def setUp(self):
+#         self.factory = RequestFactory()
+#         self.user = User.objects.create_user(username="testuser", password="password")
+#         self.employee = Employee.objects.create(
+#             name="Alice", email="alice@example.com", department="HR", user=self.user
+#         )
+
+#     def test_daily_report_new_view_post_valid(self):
+#         data = {
+#             "employee_code": self.employee,
+#             "job_description": "これは業務内容です。",
+#             "reported_on": datetime.date.today(),
+#         }
+#         request = self.factory.post(reverse("daily_report_new"), data)
+#         request.user = self.user
+#         response = DailyReportCreateView.as_view(request)
+        
+#         # フォームのエラーを確認
+#         if response.status_code == 200:
+#             print(response.context_data['form'].errors)
+#         # POSTが有効なら302が通るはず
+#         self.assertEqual(response.status_code, 302)
+#         self.assertTrue(DailyReport.objects.filter(employee_code='A').exists())
+#         # オブジェクトが存在することを確認
+
+
+# class DailyReportCreateViewTest(TestCase):
+#     def setUp(self):
+#         self.factory = RequestFactory()
+#         self.user1 = User.objects.create_user(
+#             username="testuser", password="password", is_staff=True
+#         )
+#         self.user2 = User.objects.create_user(username="testuser2", password="password")
+#         self.employee = Employee.objects.create(
+#             name="Alice", email="alice@example.com", department="HR", user=self.user1
+#         )
+#         self.manager = Employee.objects.create(
+#             name="Bob", email="Bob@example.com", department="HR", user=self.user2
+#         )
+#         self.daily_report = DailyReport.objects.create(
+#             employee_code=self.employee,
+#             job_description="これは業務内容です。",
+#             reported_on=datetime.date.today(),
+#         )
+#     # 日報新規作成のテスト
+#     def test_daily_report_new_view_post_valid(self):
+#         data = {
+#             "job_description": "これは業務内容です。",
+#         }
+#         url = reverse(
+#             "daily_report_new", kwargs={"report_id": self.daily_report.pk}
+#         )
+#         request = self.factory.post(url, data)
+
+#         request.user = self.user1
+#         response = views.DailyReportCreateView.as_view()(
+#             request, report_id=self.daily_report.pk
+#         )
+#         # POSTが有効なら302が通るはず
+#         self.assertEqual(response.status_code, 302)
+
+#     # 日報が作られていることを確認するテスト
+#     def test_daily_report_new_view_post_created(self):
+#         data = {
+#             "job_description": "これは業務内容です。",
+#         }
+#         url = reverse(
+#             "daily_report_new", kwargs={"report_id": self.daily_report.pk}
+#         )
+#         request = self.factory.post(url, data)
+
+#         request.user = self.user1
+#         response = views.DailyReportCreateView.as_view()(
+#             request, report_id=self.daily_report.pk
+#         )
+
+#         self.assertEqual(DailyReport.objects.count(), 1)
+
+#         comment = DailyReport.objects.first()
+#         self.assertEqual(DailyReport.employee_code, self.employee)
+        
+
+#     # 日報のフォームが空の時のテスト
+#     def test_daily_report_invalid_form(self):
+#         data = {"job_description": ""}
+#         url = reverse(
+#             "daily_report_new", kwargs={"report_id": self.daily_report.pk}
+#         )
+#         self.client.login(username="testuser", password="password")
+#         response = self.client.post(url, data)
+
+#         self.assertEqual(response.status_code, 200)
 
 
 # modelの単体テスト

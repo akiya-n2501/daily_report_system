@@ -7,7 +7,7 @@
 <h1>日報一覧</h1>
 {% comment %} 日報新規作成ボタン {% endcomment %}
 <div class="d-flex justify-content-end">
-  <a href="">
+  <a href="{% url 'daily_report_new' %}">
     <button type="submit" class="btn btn-primary float-right">新規作成</button>
     <br>
   </a>
@@ -36,7 +36,7 @@
         <a href="">
           {{ daily_report.job_description|slice:":15" }}
         </a>
-      </td」」
+      </td>
     </tr>
   {% empty %}
   <p>まだ日報はありません。</p>
