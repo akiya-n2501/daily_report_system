@@ -3,6 +3,7 @@ from django import forms
 from .models import DailyReportComment
 
 
+# 日報コメントフォーム
 class DailyReportCommentForm(forms.ModelForm):
     comment = forms.CharField(
         required=False,  # Django の標準必須バリデーションを無効化
@@ -40,3 +41,14 @@ class DailyReportCommentForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+
+
+# 日報一覧画面 日付範囲検索
+class DailyReportSearchForm(forms.Form):
+    start_date = forms.DateField(
+        required=False, widget=forms.DateInput(attrs={"type": "date"}), label="いつから"
+    )
+    end_date = forms.DateField(
+        required=False, widget=forms.DateInput(attrs={"type": "date"}), label="いつまで"
+    )
+    keyword = forms.CharField(required=False, label="キーワード")
