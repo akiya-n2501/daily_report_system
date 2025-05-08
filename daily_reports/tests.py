@@ -7,6 +7,7 @@ from employees.models import Employee, User
 
 from .models import DailyReport, DailyReportComment
 
+from . import views
 
 class DailyReportTest(TestCase):
     def setUp(self):
@@ -85,3 +86,18 @@ class DailyReportListViewTest(TestCase):
         self.assertIn(self.daily_report.employee_code.name, content)
         # 先頭10文字
         self.assertIn(self.daily_report.job_description[:10], content)
+
+class DailyReportCreateViewTest(TestCase):
+    def setUp(self):
+
+    def test_daily_report_new_view_post_valid(self):
+        data = {
+            "Employee_code": "A",
+            "job_description": "abcd",
+            "reported_on": "2025-05-08",
+        }
+        request = self.factory.post(reverse("daily_report_new"), data)
+        request.user = self.staff_user
+        response = views.daily_report_new(request)
+        # POSTが有効なら302が通るはず
+        self.assertEqual(response.status_code, 302)

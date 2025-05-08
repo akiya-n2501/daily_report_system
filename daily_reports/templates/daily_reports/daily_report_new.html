@@ -5,17 +5,12 @@
   <title>日報の新規登録</title>
 </head>
 <body>
-  <h1>日報の新規登録</h1>
+  <h1>日報新規登録</h1>
   <form method="POST" action="{% url 'daily_report_new' %}">
-        <!-- {% csrf_token %} -->
-        <label for="job_description">業務内容:</label>
-        <input type="textbox" id="" name="job_description">
-        <br><br>
-        <label for="">日付:</label>
-        <input type="date" name="reported_on">
-        <br><br>
+        {% csrf_token %}
+        {{ form.as_p }}
         <button type="submit">登録</button>
-      </form>
-    <p><a href="{url 'daily_report_detail'}">戻る</a></p>
+  </form>
+  <p><a href="{url 'daily_report_detail'}">戻る</a></p>
 </body>
 </html>
