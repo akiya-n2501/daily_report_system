@@ -13,7 +13,9 @@ password_validator = RegexValidator(
 
 
 class EmployeeUserForm(forms.ModelForm):
-    username = forms.CharField(max_length=50, required=True, label="ユーザー名")
+    name = forms.CharField(required=True, label="名前")
+    department = forms.CharField(required=False, label="部署")
+    username = forms.CharField(required=True, label="ユーザー名")
     password = forms.CharField(
         widget=forms.PasswordInput,
         required=True,
@@ -30,6 +32,36 @@ class EmployeeUserForm(forms.ModelForm):
             "department": "部署",
         }
 
+    # 名前の文字数のバリデーション
+    def clean_name(self):
+        name = self.cleaned_data.get("name", "").strip()  # 前後の空白を削除
+        length = len(name)
+        if length > 50:
+            raise forms.ValidationError(
+                f"名前は50文字以内で入力してください。（現在の文字数: {length}）"
+            )
+        return name
+
+    # 部署の文字数のバリデーション
+    def clean_department(self):
+        department = self.cleaned_data.get("department", "").strip()  # 前後の空白を削除
+        length = len(department)
+        if length > 100:
+            raise forms.ValidationError(
+                f"部署は100文字以内で入力してください。（現在の文字数: {length}）"
+            )
+        return department
+
+    # ユーザー名の文字数のバリデーション
+    def clean_username(self):
+        username = self.cleaned_data.get("username", "").strip()  # 前後の空白を削除
+        length = len(username)
+        if length > 50:
+            raise forms.ValidationError(
+                f"ユーザー名は50文字以内で入力してください。（現在の文字数: {length}）"
+            )
+        return username
+
     def save(self, commit=True):
         employee = super().save(commit=False)
         username = self.cleaned_data["username"]
@@ -42,7 +74,10 @@ class EmployeeUserForm(forms.ModelForm):
 
 
 class EmployeeUserEditForm(forms.ModelForm):
-    username = forms.CharField(max_length=50, required=True, label="ユーザー名")
+    name = forms.CharField(required=True, label="名前")
+    department = forms.CharField(required=False, label="部署")
+    username = forms.CharField(required=True, label="ユーザー名")
+
     password = forms.CharField(
         widget=forms.PasswordInput,
         required=False,
@@ -66,6 +101,36 @@ class EmployeeUserEditForm(forms.ModelForm):
 
         if user:
             self.fields['username'].initial = user.username
+
+    # 名前の文字数のバリデーション
+    def clean_name(self):
+        name = self.cleaned_data.get("name", "").strip()  # 前後の空白を削除
+        length = len(name)
+        if length > 50:
+            raise forms.ValidationError(
+                f"名前は50文字以内で入力してください。（現在の文字数: {length}）"
+            )
+        return name
+
+    # 部署の文字数のバリデーション
+    def clean_department(self):
+        department = self.cleaned_data.get("department", "").strip()  # 前後の空白を削除
+        length = len(department)
+        if length > 100:
+            raise forms.ValidationError(
+                f"部署は100文字以内で入力してください。（現在の文字数: {length}）"
+            )
+        return department
+
+    # ユーザー名の文字数のバリデーション
+    def clean_username(self):
+        username = self.cleaned_data.get("username", "").strip()  # 前後の空白を削除
+        length = len(username)
+        if length > 50:
+            raise forms.ValidationError(
+                f"ユーザー名は50文字以内で入力してください。（現在の文字数: {length}）"
+            )
+        return username
 
     def save(self, commit=True):
         employee = super().save(commit=False)
