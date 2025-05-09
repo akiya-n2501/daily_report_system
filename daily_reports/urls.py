@@ -4,10 +4,9 @@ from .views import (
     DailyReportCommentCreateView,
     DailyReportListView,
     DailyReportSearchView,
-    DailyReportCreateView,
     DailyReportEditView,
-    DailyReportDetailView,
     DailyReportCreateView,
+    DailyReportDetailView,
 )
 
 urlpatterns = [

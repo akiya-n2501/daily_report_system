@@ -1,18 +1,16 @@
 from datetime import datetime
 
-from django.views.generic import CreateView, ListView
-from django.shortcuts import render
-from .forms import DailyReportForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.timezone import make_aware
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
 
-from .forms import DailyReportCommentForm, DailyReportSearchForm
+
+from .forms import DailyReportCommentForm, DailyReportForm, DailyReportSearchForm
 from .models import DailyReport, DailyReportComment, Employee
 
 
@@ -47,21 +45,6 @@ class DailyReportCommentCreateView(CreateView):
         return reverse("daily_report_detail", kwargs={"pk": self.kwargs.get("pk")})
 
 
-# 日報一覧
-@method_decorator(login_required, name="dispatch")
-class DailyReportListView(ListView):
-    model = DailyReport
-    template_name = "daily_reports/daily_report_list.html"
-    context_object_name = "daily_reports"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["employee"] = Employee.objects.select_related("employee_code").values(
-            "name"
-        )
-        return context
-
-
 # 日報新規登録
 @method_decorator(login_required, name="dispatch")
 class DailyReportCreateView(CreateView):
@@ -76,12 +59,13 @@ class DailyReportCreateView(CreateView):
         )
 
 
-# 日報検索
+# 日報一覧画面 検索機能あり
 @method_decorator(login_required, name="dispatch")
-class DailyReportSearchView(ListView):
+class DailyReportListView(ListView):
     model = DailyReport
     template_name = "daily_reports/daily_report_list.html"
     context_object_name = "daily_reports"
+    ordering = "-reported_on"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -148,7 +132,7 @@ class DailyReportEditView(LoginRequiredMixin, UpdateView):
 @method_decorator(login_required, name="dispatch")
 class DailyReportDetailView(DetailView):
     model = DailyReport
-    template_name = 'daily_reports/daily_report_detail.html'
+    template_name = "daily_reports/daily_report_detail.html"
     context_object_name = "daily_report"
 
     def get_context_data(self, **kwargs):
@@ -157,5 +141,5 @@ class DailyReportDetailView(DetailView):
             "name"
         )
         # FKの無い側からある側にモデルを逆参照
-        context['obj'] = DailyReport.objects.get(id=self.kwargs['pk'])
+        context["obj"] = DailyReport.objects.get(id=self.kwargs["pk"])
         return context

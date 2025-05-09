@@ -8,10 +8,7 @@ from employees.models import Employee, User
 
 from . import views
 from .models import DailyReport, DailyReportComment
-
-
 from .views import DailyReportCreateView
-
 
 # # 日報新規登録画面の単体テスト
 # class DailyReportCreateViewTest(TestCase):
@@ -222,27 +219,9 @@ class DailyReportListViewTest(TestCase):
             """,
         )
 
-    def test_daily_report_list_view(self):
-        # ログイン
-        self.client.force_login(self.user)
-        response = self.client.get(reverse("daily_report_index"))
-        self.assertEqual(response.status_code, 200)
-
-        content = response.content.decode("utf-8")
-
-        self.assertIn(datetime.date.today().strftime("%Y/%m/%d"), content)
-        # 従業員名
-        self.assertIn(self.daily_report.employee_code.name, content)
-        # 先頭10文字
-        self.assertIn(self.daily_report.job_description[:10], content)
-
-
-# 日報一覧画面の検索機能のテスト
-class DailyReportSearchViewTest(TestCase):
-    def setUp(self):
         self.user1 = User.objects.create_user(username="testuser1", password="password")
         self.employee1 = Employee.objects.create(
-            name="Alice", email="alice@example.com", department="HR", user=self.user1
+            name="Alice1", email="alice1@example.com", department="HR", user=self.user1
         )
         DailyReport.objects.create(
             reported_on="2010-01-01",
@@ -268,15 +247,29 @@ class DailyReportSearchViewTest(TestCase):
             job_description="Bunquet",
         )
 
+    def test_daily_report_list_view(self):
+        # ログイン
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("daily_report_index"))
+        self.assertEqual(response.status_code, 200)
+
+        content = response.content.decode("utf-8")
+
+        self.assertIn(datetime.date.today().strftime("%Y/%m/%d"), content)
+        # 従業員名
+        self.assertIn(self.daily_report.employee_code.name, content)
+        # 先頭10文字
+        self.assertIn(self.daily_report.job_description[:10], content)
+
     def test_daily_report_search_without_login(self):
         # ログインしていない時にリダイレクトされるか
-        response = self.client.get(reverse("search_list"), {"keyword": "LGTM"})
+        response = self.client.get(reverse("daily_report_index"), {"keyword": "LGTM"})
         self.assertEqual(response.status_code, 302)
 
     def test_daily_report_search_with_employee_name(self):
         # 名前を検索し、含まれるべき日報が含まれるか
         self.client.force_login(self.user1)
-        response = self.client.get(reverse("search_list"), {"keyword": "Alice1"})
+        response = self.client.get(reverse("daily_report_index"), {"keyword": "Alice1"})
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Alice1")
         self.assertNotContains(response, "Alice2")

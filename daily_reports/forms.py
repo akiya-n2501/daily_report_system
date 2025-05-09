@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import DailyReportComment, DailyReport
+from .models import DailyReport, DailyReportComment
 
 
 # 日報コメントフォーム
@@ -56,15 +56,14 @@ class DailyReportSearchForm(forms.Form):
 
 # 日報新規登録画面
 class DailyReportForm(forms.ModelForm):
-
     class Meta:
         model = DailyReport
-        fields = ["employee_code","job_description","reported_on"]
-        labels = {"employee_code": "名前",
-                  "job_description": "業務内容",
-                  "reported_on": "日付",
-                  }
-
+        fields = ["employee_code", "job_description", "reported_on"]
+        labels = {
+            "employee_code": "名前",
+            "job_description": "業務内容",
+            "reported_on": "日付",
+        }
 
     # def clean_job_description(self):
     #      job_description = self.cleaned_data.get("job_description")
@@ -72,13 +71,13 @@ class DailyReportForm(forms.ModelForm):
     #         raise forms.ValidationError("業務内容は2000文字以内で入力してください。")
     #      return job_description
 
-
     def save(self, commit=True):
         daily_report = super().save(commit=False)
         if commit:
             daily_report.save()
         return daily_report
 
+# 日報編集画面
 class DailyReportForm(forms.ModelForm):
     class Meta:
         model = DailyReport
