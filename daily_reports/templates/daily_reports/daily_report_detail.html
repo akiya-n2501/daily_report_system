@@ -3,71 +3,65 @@
 {% block title %}日報詳細画面{% endblock %}
 
 {% block content %}
-  <!-- wrap始まり -->
-  <div id="wrap" class="clearfix">
-    <div class="content">
-      <div class="main">
-        <section class="career">
-        <h1>日報の詳細画面</h1>
-        <table>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <section class="career">
+        <h1 class="text-center mb-4">日報の詳細画面</h1>
+        <table class= "table table-bordered">
           <tr>
-            <th>名前</th>
-            <td>{{ object.employee_code.name }}
-            </td>
+            <th class="table-primary">名前</th>
+            <td sty>{{ object.employee_code.name }}</td>
           </tr>
           <tr>
-            <th>日付</th>
-            <td>{{ object.reported_on|date:"Y/m/d" }}
-            </td>
+            <th class="table-primary">日付</th>
+            <td>{{ object.reported_on|date:"Y/m/d" }}</td>
           </tr>
           <tr>
-            <th>作成日時</th>
-            <td>{{ object.created_at }}
-            </td>
+            <th class="table-primary">更新日時</th>
+            <td>{{ object.update_at }}</td>
           </tr>
           <tr>
-            <th>業務内容</th>
-            {% comment %} <div style="border: 3px solid;"> {% endcomment %}
-             <td>{{ object.job_description|linebreaksbr }}
-            </td>
-            {% comment %} </div> {% endcomment %}
+            <th class="table-primary">業務内容</th>
+            <td style="word-wrap: break-word; white-space: normal;">
+              {{ object.job_description|linebreaksbr }}</td>
           </tr>
         </table>
-        <table>
-          <tr>
-          {% comment %} <td><p class="btn"><a href="{% url 'daily_report_index' %}">戻る</a></td> {% endcomment %}
-          {% if request.user.is_authenticated %}
-            <td><p class="btn-edit"><a href="{% url 'daily_report_edit' daily_report.pk%}">編集</a></td>
-            {% comment %} <td><p class="btn-delete"><a href="">削除</a></td> {% endcomment %}
+      </section>
+        <div class="d-flex justify-content-between mt-4">
+          {% if object.employee_code.name == request.user.username %}
+            <a href="{% url 'daily_report_edit' daily_report.pk %}" class="btn btn-outline-primary">編集</a>
+            <a href="" class="btn btn-outline-danger">削除</a>
           {% endif %}
-            </tr>
-          </table>
-      </section>
+        </div>
+
       <section>
-        <table>
+        <h2 class="mt-4">コメント一覧</h2>
+        {% for com in obj.dailyreportcomment_set.all %}
+        <table class="table table-striped">
           <tr>
-            <th>コメント</th>
-            <td>
-              {% comment %} 日報への作成者、日時、コメントを繰り返し表示 {% endcomment %}
-              {% for com in obj.dailyreportcomment_set.all %}
-                <p>コメント作成者</p>
-                <p>{{ com.employee_code.name }}</p>
-                <p>日時、コメント</p>
-                <p>{{ com.created_at }}</p>
-                <p>{{ com.comment }}</p>
-              {% empty%}
-                <p>まだコメントはありません。</p>
-              {% endfor %}
-            </td>
+            <th class="table-secondary">コメント作成者</th>
+            <td>{{ com.employee_code.name }}</td>
+          </tr>
+          <tr>
+            <th class="table-secondary">更新日時</th>
+            <td>{{ com.updated_at }}</td>
+          </tr>
+          <tr>
+            <th class="table-secondary">コメント</th>
+            <td>{{ com.comment }}</td>
           </tr>
         </table>
-        <table>
-          <tr>
-          <td><p class="btn"><a href="{% url 'daily_report_index' %}">戻る</a></td>
-          <td><p class="btn-edit"><a href="{% url 'daily_report_comment_new' daily_report.pk %}">コメントする</a></td>
-            </tr>
-          </table>
+        {% empty %}
+        <p class="text-muted">まだコメントはありません。</p>
+        {% endfor %}
       </section>
-      <table>
-  </div>   <!-- end wrap -->
-  {% endblock %}
+
+      <div class="d-flex justify-content-between mt-4">
+        <a href="{% url 'daily_report_index' %}" class="btn btn-outline-secondary">戻る</a>
+        <a href="{% url 'daily_report_comment_new' daily_report.pk %}" class="btn btn-outline-success">コメントする</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
