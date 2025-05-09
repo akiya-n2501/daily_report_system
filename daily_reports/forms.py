@@ -61,11 +61,16 @@ class DailyReportSearchForm(forms.Form):
 class DailyReportForm(forms.ModelForm):
     class Meta:
         model = DailyReport
-        fields = ["employee_code", "job_description", "reported_on"]
+        fields = ["employee_code", "reported_on", "job_description"]
         labels = {
-            "employee_code": "名前",
             "job_description": "業務内容",
             "reported_on": "日付",
+        }
+        widgets = {
+            "employee_code": forms.HiddenInput(),
+            "reported_on": forms.DateInput(
+                attrs={"type": "date"}
+            ),  # カレンダー入力にする
         }
 
     # def clean_job_description(self):
@@ -85,5 +90,5 @@ class DailyReportForm(forms.ModelForm):
 class DailyReportEditForm(forms.ModelForm):
     class Meta:
         model = DailyReport
-        fields = ['job_description']
+        fields = ["job_description"]
         labels = {"job_description": "業務内容"}
