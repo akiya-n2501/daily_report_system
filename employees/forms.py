@@ -1,10 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.core.validators import (
-    RegexValidator,
-    MinLengthValidator,
-    MaxLengthValidator,
-)
+from django.core.validators import RegexValidator
 
 from .models import Employee
 
