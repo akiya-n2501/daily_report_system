@@ -8,53 +8,67 @@
     <div class="col-md-8">
       <section class="career">
         <h1 class="text-center mb-4">日報の詳細画面</h1>
-        <table class= "table table-bordered">
-          <tr>
-            <th class="table-primary">名前</th>
-            <td sty>{{ object.employee_code.name }}</td>
-          </tr>
-          <tr>
-            <th class="table-primary">日付</th>
-            <td>{{ object.reported_on|date:"Y/m/d" }}</td>
-          </tr>
-          <tr>
-            <th class="table-primary">更新日時</th>
-            <td>{{ object.update_at }}</td>
-          </tr>
-          <tr>
-            <th class="table-primary">業務内容</th>
-            <td style="word-wrap: break-word; white-space: normal;">
-              {{ object.job_description|linebreaksbr }}</td>
-          </tr>
-        </table>
-      </section>
-        <div class="d-flex justify-content-between mt-4">
-          {% if object.employee_code.name == request.user.username %}
-            <a href="{% url 'daily_report_edit' daily_report.pk %}" class="btn btn-outline-primary">編集</a>
-            <a href="{% url 'daily_report_delete_confirm' daily_report.pk %}" class="btn btn-outline-danger">削除</a>
-          {% endif %}
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <tr>
+              <th class="table-primary" style="width: auto;">名前</th>
+              <td style="word-wrap: break-word; white-space: normal;">
+                {{ object.employee_code.name }}
+              </td>
+            </tr>
+            <tr>
+              <th class="table-primary" style="width: auto;">日付</th>
+              <td>{{ object.reported_on|date:"Y/m/d" }}</td>
+            </tr>
+            <tr>
+              <th class="table-primary" style="width: auto;">更新日時</th>
+              <td>{{ object.updated_at }}</td>
+            </tr>
+            <tr>
+              <th class="table-primary" style="width: auto;">業務内容</th>
+              <td style="word-wrap: break-word; white-space: normal;">
+                {{ object.job_description|linebreaksbr }}
+              </td>
+            </tr>
+          </table>
         </div>
+      </section>
+
+      <div class="d-flex justify-content-between mt-4">
+        {% if object.employee_code.name == request.user.username %}
+          <a href="{% url 'daily_report_edit' daily_report.pk %}" class="btn btn-outline-primary">編集</a>
+          <a href="{% url 'daily_report_delete_confirm' daily_report.pk %}" class="btn btn-outline-danger">削除</a>
+        {% endif %}
+      </div>
 
       <section>
-        <h2 class="mt-4">コメント一覧</h2>
-        {% for com in obj.dailyreportcomment_set.all %}
-        <table class="table table-striped">
-          <tr>
-            <th class="table-secondary">コメント作成者</th>
-            <td>{{ com.employee_code.name }}</td>
-          </tr>
-          <tr>
-            <th class="table-secondary">更新日時</th>
-            <td>{{ com.updated_at }}</td>
-          </tr>
-          <tr>
-            <th class="table-secondary">コメント</th>
-            <td>{{ com.comment }}</td>
-          </tr>
-        </table>
-        {% empty %}
-        <p class="text-muted">まだコメントはありません。</p>
-        {% endfor %}
+        <h2 class="mt-4 text-center">コメント一覧</h2>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <tbody>
+              {% for com in obj.dailyreportcomment_set.all %}
+              <tr>
+                <th class="table-secondary" style="width: auto;">コメント作成者</th>
+                <td>{{ com.employee_code.name }}</td>
+              </tr>
+              <tr>
+                <th class="table-secondary" style="width: auto;">更新日時</th>
+                <td>{{ com.updated_at }}</td>
+              </tr>
+              <tr>
+                <th class="table-secondary" style="width: auto;">コメント</th>
+                <td style="word-wrap: break-word; white-space: normal;">
+                  {{ com.comment }}
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="2" class="text-muted text-center">まだコメントはありません。</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <div class="d-flex justify-content-between mt-4">
