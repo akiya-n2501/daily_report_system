@@ -1,12 +1,10 @@
 from datetime import datetime
 
-from django.utils import timezone
-
-
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.timezone import make_aware
 from django.views.generic import (
@@ -67,13 +65,19 @@ class DailyReportCreateView(CreateView):
 
     def form_valid(self, form):
         if not form.instance.reported_on:
-            form.instance.reported_on = timezone.now().date() # 今日の日付を設定
+            form.instance.reported_on = timezone.now().date()  # 今日の日付を設定
         return super().form_valid(form)
-    
+
     def get_initial(self):
         initial = super().get_initial()
-        initial['reported_on'] = timezone.now().date() # 今日の日付を初期値に設定
+        initial["employee_code"] = Employee.objects.get(user=self.request.user)
+        initial["reported_on"] = timezone.now().date()  # 今日の日付を初期値に設定
         return initial
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["employee_code"] = Employee.objects.get(user=self.request.user)
+        return context
 
     def get_success_url(self):
         return reverse(
