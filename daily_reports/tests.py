@@ -227,7 +227,7 @@ class DailyReportListViewTest(TestCase):
 
         self.user1 = User.objects.create_user(username="testuser1", password="password")
         self.employee1 = Employee.objects.create(
-            name="Alice", email="alice@example.com", department="HR", user=self.user1
+            name="Alice1", email="alice1@example.com", department="HR", user=self.user1
         )
         DailyReport.objects.create(
             reported_on="2010-01-01",
@@ -269,13 +269,13 @@ class DailyReportListViewTest(TestCase):
 
     def test_daily_report_search_without_login(self):
         # ログインしていない時にリダイレクトされるか
-        response = self.client.get(reverse("search_list"), {"keyword": "LGTM"})
+        response = self.client.get(reverse("daily_report_index"), {"keyword": "LGTM"})
         self.assertEqual(response.status_code, 302)
 
     def test_daily_report_search_with_employee_name(self):
         # 名前を検索し、含まれるべき日報が含まれるか
         self.client.force_login(self.user1)
-        response = self.client.get(reverse("search_list"), {"keyword": "Alice1"})
+        response = self.client.get(reverse("daily_report_index"), {"keyword": "Alice1"})
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Alice1")
         self.assertNotContains(response, "Alice2")
