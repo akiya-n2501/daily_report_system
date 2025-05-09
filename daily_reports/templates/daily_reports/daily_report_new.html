@@ -4,6 +4,7 @@
 
 {% block content %}
 <h1>日報新規登録フォーム</h1>
+<p>名前: {{ employee_code.name }}</p>
 <form method="POST" action="{% url 'daily_report_new' %}">
   {% csrf_token %} {{ form.as_p }}
   <button type="submit">登録</button>
