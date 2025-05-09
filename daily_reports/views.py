@@ -3,17 +3,22 @@ from datetime import datetime
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.timezone import make_aware
-from django.views.generic import CreateView, ListView, DetailView, UpdateView
-
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+)
 
 from .forms import (
     DailyReportCommentForm,
+    DailyReportEditForm,
     DailyReportForm,
     DailyReportSearchForm,
-    DailyReportEditForm,
 )
 from .models import DailyReport, DailyReportComment, Employee
 
@@ -121,12 +126,12 @@ class DailyReportListView(ListView):
 class DailyReportEditView(UpdateView):
     model = DailyReport
     form_class = DailyReportEditForm
-    template_name = 'daily_reports/daily_report_edit.html'
+    template_name = "daily_reports/daily_report_edit.html"
 
     # success_url = reverse_lazy('daily_report_detail', kwargs={"pk": self.kwargs.get("pk")})
     def get_context_data(self, **kwargs):
         context = super(DailyReportEditView, self).get_context_data(**kwargs)
-        context['message_type'] = "edit"
+        context["message_type"] = "edit"
         context["obj"] = DailyReport.objects.get(id=self.kwargs["pk"])
         return context
 
@@ -150,3 +155,22 @@ class DailyReportDetailView(DetailView):
         # FKの無い側からある側にモデルを逆参照
         context["obj"] = DailyReport.objects.get(id=self.kwargs["pk"])
         return context
+
+
+# 日報削除確認画面
+@login_required
+def daily_report_delete_confirm(request, pk):
+    daily_report = get_object_or_404(DailyReport, pk=pk)
+    return render(
+        request,
+        "daily_reports/daily_report_delete_confirm.html",
+        {"daily_report": daily_report},
+    )
+
+
+# 日報削除
+@method_decorator(staff_member_required, name="dispatch")
+class DailyReportDeleteView(DeleteView):
+    model = DailyReport
+    template_name = "daily_reports/daily_report_delete_confirm.html"
+    success_url = reverse_lazy("daily_report_index")

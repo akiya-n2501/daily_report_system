@@ -288,3 +288,57 @@ class DailyReportListViewTest(TestCase):
         self.assertContains(response, "Alice1")
         self.assertNotContains(response, "Alice2")
         self.assertNotContains(response, "Alice3")
+
+
+# 日報削除確認画面
+class DailyReportDeleteConfirmTest(TestCase):
+    """日報削除確認画面のテスト"""
+
+    def setUp(self):
+        self.no_staff_user = User.objects.create_user(
+            username="no_staff_user", password="password", is_staff=False
+        )
+        self.employee = Employee.objects.create(
+            name="Alice",
+            email="alice@example.com",
+            department="HR",
+            user=self.no_staff_user,
+        )
+        self.staff_user = User.objects.create_user(
+            username="staff_user", password="password", is_staff=True
+        )
+        self.daily_report = DailyReport.objects.create(
+            reported_on="2010-01-01",
+            employee_code=self.employee,
+            job_description="LGTM",
+        )
+
+    def test_daily_report_delete_confirm_without_login(self):
+        """ログインしていないとき、リダイレクトが期待される"""
+        response = self.client.get(
+            reverse("daily_report_delete_confirm", kwargs={"pk": self.daily_report.pk})
+        )
+        self.assertEqual(response.status_code, 302)
+
+    def test_daily_report_delete_confirm_without_staff(self):
+        """スタッフでないとき、リダイレクトが期待される"""
+        self.client.login(
+            username=self.no_staff_user.username, password=self.no_staff_user.password
+        )
+        response = self.client.get(
+            reverse("daily_report_delete_confirm", kwargs={"pk": self.daily_report.pk})
+        )
+        self.assertEqual(response.status_code, 302)
+
+    def test_daily_report_delete_confirm_with_staff(self):
+        """スタッフのとき、302が期待される"""
+        self.client.login(
+            username=self.staff_user.username, password=self.staff_user.password
+        )
+        response = self.client.get(
+            reverse("daily_report_delete_confirm", kwargs={"pk": self.daily_report.pk})
+        )
+        self.assertEqual(response.status_code, 302)
+
+
+# 日報削除
