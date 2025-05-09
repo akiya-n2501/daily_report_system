@@ -199,7 +199,21 @@ class DailyReportCommentCreateViewUnitTest(TestCase):
         response = self.client.post(url, data)
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "コメントは1文字以上で入力してください。")
+        self.assertContains(
+            response, "コメントは1文字以上2000文字以内で入力してください。"
+        )
+
+    # 日報コメントのフォームが空の時のテスト
+    def test_daily_report_comment_long_invalid_form(self):
+        data = {"comment": "あ" * 2001}
+        url = reverse("daily_report_comment_new", kwargs={"pk": self.daily_report.pk})
+        self.client.login(username="testuser", password="password")
+        response = self.client.post(url, data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response, "コメントは2000文字以内で入力してください。（現在の文字数: 2001）"
+        )
 
 
 # 日報一覧画面の単体テスト

@@ -25,7 +25,9 @@ class DailyReportCommentForm(forms.ModelForm):
         comment = self.cleaned_data.get("comment", "").strip()  # 前後の空白を削除
         length = len(comment)
         if length < 1:
-            raise forms.ValidationError("コメントは1文字以上で入力してください。")
+            raise forms.ValidationError(
+                "コメントは1文字以上2000文字以内で入力してください。"
+            )
         if length > 2000:
             raise forms.ValidationError(
                 f"コメントは2000文字以内で入力してください。（現在の文字数: {length}）"
@@ -76,6 +78,7 @@ class DailyReportForm(forms.ModelForm):
         if commit:
             daily_report.save()
         return daily_report
+
 
 # 日報編集画面
 class DailyReportEditForm(forms.ModelForm):
