@@ -9,7 +9,12 @@ from django.utils.timezone import make_aware
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
 
 
-from .forms import DailyReportCommentForm, DailyReportForm, DailyReportSearchForm, DailyReportEditForm
+from .forms import (
+    DailyReportCommentForm,
+    DailyReportForm,
+    DailyReportSearchForm,
+    DailyReportEditForm,
+)
 from .models import DailyReport, DailyReportComment, Employee
 
 
@@ -36,6 +41,7 @@ class DailyReportCommentCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context["employee_name"] = daily_report.employee_code.name
         context["reported_on"] = daily_report.reported_on
+        context["daily_report"] = daily_report
         context["job_description"] = daily_report.job_description
         return context
 
@@ -109,6 +115,7 @@ class DailyReportListView(ListView):
                 )
             return queryset
 
+
 # 日報編集画面
 @method_decorator(login_required, name="dispatch")
 class DailyReportEditView(UpdateView):
@@ -118,10 +125,10 @@ class DailyReportEditView(UpdateView):
 
     # success_url = reverse_lazy('daily_report_detail', kwargs={"pk": self.kwargs.get("pk")})
     def get_context_data(self, **kwargs):
-       context = super(DailyReportEditView, self).get_context_data(**kwargs)
-       context['message_type'] = "edit"
-       context["obj"] = DailyReport.objects.get(id=self.kwargs["pk"])
-       return context
+        context = super(DailyReportEditView, self).get_context_data(**kwargs)
+        context['message_type'] = "edit"
+        context["obj"] = DailyReport.objects.get(id=self.kwargs["pk"])
+        return context
 
     # 成功時のURLをpkから設定
     def get_success_url(self):

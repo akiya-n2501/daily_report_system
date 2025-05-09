@@ -8,6 +8,7 @@ class DailyReportCommentForm(forms.ModelForm):
     comment = forms.CharField(
         required=False,  # Django の標準必須バリデーションを無効化
         widget=forms.Textarea(attrs={"placeholder": "コメントを入力してください"}),
+        initial="",
     )
 
     class Meta:
