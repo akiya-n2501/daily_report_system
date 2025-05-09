@@ -5,12 +5,12 @@ from .views import (
     DailyReportListView,
     DailyReportSearchView,
     DailyReportDetailView,
-    DailyReportCreateView
+    DailyReportCreateView,
 )
 
 urlpatterns = [
     path(
-        "<int:report_id>/comment/new/",
+        "<int:pk>/comment/new/",
         DailyReportCommentCreateView.as_view(),
         name="daily_report_comment_new",
     ),
@@ -21,5 +21,5 @@ urlpatterns = [
     ),
     path("", DailyReportListView.as_view(), name="daily_report_index"),
     path("search_list/", DailyReportSearchView.as_view(), name="search_list"),
-    path("new/", DailyReportCreateView.as_view(),name="daily_report_new")
+    path("new/", DailyReportCreateView.as_view(), name="daily_report_new"),
 ]
