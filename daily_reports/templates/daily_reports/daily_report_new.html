@@ -3,7 +3,7 @@
 {% block title %}日報の新規登録{% endblock title %}
 
 {% block content %}
-<h1>日報新規登録</h1>
+<h1>日報新規登録フォーム</h1>
 <form method="POST" action="{% url 'daily_report_new' %}">
   {% csrf_token %} {{ form.as_p }}
   <button type="submit">登録</button>

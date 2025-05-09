@@ -64,6 +64,11 @@ class DailyReportForm(forms.ModelForm):
             "job_description": "業務内容",
             "reported_on": "日付",
         }
+        
+        widgets = {
+            "reported_on": forms.DateInput(attrs={"type": "date"}), # カレンダー入力にする
+        }
+
 
     # def clean_job_description(self):
     #      job_description = self.cleaned_data.get("job_description")
