@@ -8,6 +8,7 @@ class DailyReportCommentForm(forms.ModelForm):
     comment = forms.CharField(
         required=False,  # Django の標準必須バリデーションを無効化
         widget=forms.Textarea(attrs={"placeholder": "コメントを入力してください"}),
+        initial="",
     )
 
     class Meta:
@@ -25,7 +26,9 @@ class DailyReportCommentForm(forms.ModelForm):
         comment = self.cleaned_data.get("comment", "").strip()  # 前後の空白を削除
         length = len(comment)
         if length < 1:
-            raise forms.ValidationError("コメントは1文字以上で入力してください。")
+            raise forms.ValidationError(
+                "コメントは1文字以上2000文字以内で入力してください。"
+            )
         if length > 2000:
             raise forms.ValidationError(
                 f"コメントは2000文字以内で入力してください。（現在の文字数: {length}）"
@@ -58,12 +61,17 @@ class DailyReportSearchForm(forms.Form):
 class DailyReportForm(forms.ModelForm):
     class Meta:
         model = DailyReport
-        fields = ["employee_code", "job_description", "reported_on"]
+        fields = ["employee_code", "reported_on","job_description"]
         labels = {
             "employee_code": "名前",
             "job_description": "業務内容",
             "reported_on": "日付",
         }
+        
+        widgets = {
+            "reported_on": forms.DateInput(attrs={"type": "date"}), # カレンダー入力にする
+        }
+
 
     # def clean_job_description(self):
     #      job_description = self.cleaned_data.get("job_description")
@@ -76,6 +84,7 @@ class DailyReportForm(forms.ModelForm):
         if commit:
             daily_report.save()
         return daily_report
+
 
 # 日報編集画面
 class DailyReportEditForm(forms.ModelForm):

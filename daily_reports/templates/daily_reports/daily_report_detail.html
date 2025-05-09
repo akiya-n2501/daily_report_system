@@ -56,12 +56,17 @@
         <p class="text-muted">まだコメントはありません。</p>
         {% endfor %}
       </section>
-
-      <div class="d-flex justify-content-between mt-4">
-        <a href="{% url 'daily_report_index' %}" class="btn btn-outline-secondary">戻る</a>
-        <a href="{% url 'daily_report_comment_new' daily_report.pk %}" class="btn btn-outline-success">コメントする</a>
-      </div>
-    </div>
-  </div>
-</div>
+      <table>
+        <tr>
+        <td><p class="btn"><a href="{% url 'daily_report_index' %}">戻る</a></td>
+        <td><p class="btn-edit"><a href="{% url 'daily_report_comment_new' daily_report.pk %}">コメントする</a></td>
+          </tr>
+        </table>
+    </section>
+    <table>
+      <form action="{% url 'daily_report_delete_confirm' daily_report.pk %}", method="GET">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">削除</button>
+      </form>
+</div>   <!-- end wrap -->
 {% endblock %}

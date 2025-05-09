@@ -156,8 +156,8 @@ class DailyReportCommentCreateViewUnitTest(TestCase):
             reported_on=datetime.date.today(),
         )
 
-    # 日報コメント新規作成のテスト
     def test_daily_report_comment_new_view_post_valid(self):
+        '''日報コメント新規作成のテスト'''
         data = {
             "comment": "これはコメントです。",
         }
@@ -171,8 +171,8 @@ class DailyReportCommentCreateViewUnitTest(TestCase):
         # POSTが有効なら302が通るはず
         self.assertEqual(response.status_code, 302)
 
-    # 日報コメントが作られていることを確認するテスト
     def test_daily_report_comment_new_view_post_created(self):
+        '''日報コメントが作られていることを確認するテスト'''
         data = {
             "comment": "これはコメントです。",
         }
@@ -191,15 +191,29 @@ class DailyReportCommentCreateViewUnitTest(TestCase):
         self.assertEqual(comment.employee_code, self.employee)
         self.assertEqual(comment.daily_report_code, self.daily_report)
 
-    # 日報コメントのフォームが空の時のテスト
     def test_daily_report_comment_invalid_form(self):
+        '''日報コメントのフォームが空の時のテスト'''
         data = {"comment": ""}
         url = reverse("daily_report_comment_new", kwargs={"pk": self.daily_report.pk})
         self.client.login(username="testuser", password="password")
         response = self.client.post(url, data)
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "コメントは1文字以上で入力してください。")
+        self.assertContains(
+            response, "コメントは1文字以上2000文字以内で入力してください。"
+        )
+
+    def test_daily_report_comment_long_invalid_form(self):
+        '''日報コメントのフォームが2000文字以上の時のテスト'''
+        data = {"comment": "あ" * 2001}
+        url = reverse("daily_report_comment_new", kwargs={"pk": self.daily_report.pk})
+        self.client.login(username="testuser", password="password")
+        response = self.client.post(url, data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response, "コメントは2000文字以内で入力してください。（現在の文字数: 2001）"
+        )
 
 
 # 日報一覧画面の単体テスト
@@ -274,3 +288,57 @@ class DailyReportListViewTest(TestCase):
         self.assertContains(response, "Alice1")
         self.assertNotContains(response, "Alice2")
         self.assertNotContains(response, "Alice3")
+
+
+# 日報削除確認画面
+class DailyReportDeleteConfirmTest(TestCase):
+    """日報削除確認画面のテスト"""
+
+    def setUp(self):
+        self.no_staff_user = User.objects.create_user(
+            username="no_staff_user", password="password", is_staff=False
+        )
+        self.employee = Employee.objects.create(
+            name="Alice",
+            email="alice@example.com",
+            department="HR",
+            user=self.no_staff_user,
+        )
+        self.staff_user = User.objects.create_user(
+            username="staff_user", password="password", is_staff=True
+        )
+        self.daily_report = DailyReport.objects.create(
+            reported_on="2010-01-01",
+            employee_code=self.employee,
+            job_description="LGTM",
+        )
+
+    def test_daily_report_delete_confirm_without_login(self):
+        """ログインしていないとき、リダイレクトが期待される"""
+        response = self.client.get(
+            reverse("daily_report_delete_confirm", kwargs={"pk": self.daily_report.pk})
+        )
+        self.assertEqual(response.status_code, 302)
+
+    def test_daily_report_delete_confirm_without_staff(self):
+        """スタッフでないとき、リダイレクトが期待される"""
+        self.client.login(
+            username=self.no_staff_user.username, password=self.no_staff_user.password
+        )
+        response = self.client.get(
+            reverse("daily_report_delete_confirm", kwargs={"pk": self.daily_report.pk})
+        )
+        self.assertEqual(response.status_code, 302)
+
+    def test_daily_report_delete_confirm_with_staff(self):
+        """スタッフのとき、302が期待される"""
+        self.client.login(
+            username=self.staff_user.username, password=self.staff_user.password
+        )
+        response = self.client.get(
+            reverse("daily_report_delete_confirm", kwargs={"pk": self.daily_report.pk})
+        )
+        self.assertEqual(response.status_code, 302)
+
+
+# 日報削除
