@@ -31,23 +31,26 @@
           <a href="{% url 'daily_report_detail' obj.pk %}" class="btn btn-secondary mt-3">戻る</a>
       </form>
       </section>
-      <section>
-        <table>
+
+      <section class="mt-4">
+        <h2 class="text-center">コメント一覧</h2>
+        <table class="table table-striped table-hover">
           <tr>
-            <th>コメント</th>
-            <td>
-              {% comment %} 日報への作成者、日時、コメントを繰り返し表示 {% endcomment %}
+            <th class="table-secondary">コメント</th>
+            <td style="word-wrap: break-word; white-space: normal;">
               {% for com in obj.dailyreportcomment_set.all %}
-                <p>コメント作成者</p>
-                <p>{{ com.employee_code.name }}</p>
-                <p>日時、コメント</p>
-                <p>{{ com.created_at }}</p>
-                <p>{{ com.comment }}</p>
-              {% empty%}
-                <p>まだコメントはありません。</p>
+                <p><strong>コメント作成者:</strong> {{ com.employee_code.name }}</p>
+                <p><strong>日時:</strong> {{ com.created_at }}</p>
+                <p><strong>コメント:</strong> {{ com.comment }}</p>
+                <hr>
+              {% empty %}
+                <p class="text-muted">まだコメントはありません。</p>
               {% endfor %}
             </td>
           </tr>
         </table>
       </section>
+    </div>
+  </div>
+</div>
 {% endblock %}
