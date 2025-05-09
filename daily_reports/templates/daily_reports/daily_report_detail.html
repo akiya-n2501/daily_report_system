@@ -35,10 +35,10 @@
       </section>
 
       <div class="d-flex justify-content-between mt-4">
-        {% if object.employee_code.name == request.user.username %}
+
           <a href="{% url 'daily_report_edit' daily_report.pk %}" class="btn btn-outline-primary">編集</a>
           <a href="{% url 'daily_report_delete_confirm' daily_report.pk %}" class="btn btn-outline-danger">削除</a>
-        {% endif %}
+
       </div>
 
       <section>
