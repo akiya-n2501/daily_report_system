@@ -58,7 +58,7 @@ class DailyReportSearchForm(forms.Form):
 class DailyReportForm(forms.ModelForm):
     class Meta:
         model = DailyReport
-        fields = ["employee_code", "job_description", "reported_on"]
+        fields = ["employee_code", "reported_on","job_description"]
         labels = {
             "employee_code": "名前",
             "job_description": "業務内容",
