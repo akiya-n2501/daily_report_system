@@ -122,3 +122,18 @@ class DailyReportSearchView(ListView):
                     )
                 )
             return queryset
+
+#日報詳細
+@method_decorator(login_required, name="dispatch")
+class DailyReportDetailView(DetailView):
+    model = DailyReport
+    template_name = 'daily_reports/daily_report_detail.html'
+    context_object_name = "daily_report"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["employee"] = Employee.objects.select_related("employee_code").values(
+            "name"
+        )
+        context['obj'] = DailyReport.objects.get(id=self.kwargs['pk'])
+        return context

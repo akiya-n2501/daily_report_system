@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <!-- wrap始まり -->
+  <div id="wrap" class="clearfix">
+    <div class="content">
+      <div class="main">
+        <section class="career">
+        <h1>日報の詳細画面</h1>
+        <table>
+          <tr>
+            <th>名前</th>
+            <td>{{ object.employee_code.name }}
+            </td>
+          </tr>
+          <tr>
+            <th>日付</th>
+            <td>{{ object.reported_on|date:"Y/m/d" }}
+            </td>
+          </tr>
+          <tr>
+            <th>作成日時</th>
+            <td>{{ object.created_at }}
+            </td>
+          </tr>
+          <tr>
+            <th>内容</th>
+            <td>{{ object.job_description|linebreaksbr }}
+            </td>
+          </tr>
+        </table>
+        <table>
+          <tr>
+          <td><p class="btn"><a href="{% url 'daily_report_index' %}">戻る</a></td>
+          {% comment %} {% if request.user.is_authenticated %} {% endcomment %}
+            {% comment %} <td><p class="btn-edit"><a href="">編集</a></td> {% endcomment %}
+            {% comment %} <td><p class="btn-delete"><a href="">削除</a></td> {% endcomment %}
+          {% comment %} {% endif %} {% endcomment %}
+            </tr>
+          </table>
+      </section>
+      <section>
+        <table>
+          <tr>
+            <th>コメント</th>
+            <td>
+              {% for com in obj.dailyreportcomment_set.all %}
+                <p>コメント作成者</p>
+                <p>{{ com.employee_code.name }}</p>
+                <p>日時、コメント</p>
+                <p>{{ com.created_at }}</p>
+                <p>{{ com.comment }}</p>
+              {% empty%}
+                <p>まだコメントはありません。</p>
+              {% endfor %}
+            </td>
+          </tr>
+        </table>
+        <table>
+          <tr>
+          <td><p class="btn"><a href="{% url 'daily_report_index' %}">戻る</a></td>
+          <td><p class="btn-edit"><a href="{% url 'daily_report_comment_new' daily_report.pk %}">コメントする</a></td>
+            </tr>
+          </table>
+      </section>
+      <table>
+  </div>   <!-- end wrap -->
+  {% endblock %}
