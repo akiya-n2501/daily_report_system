@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% block title %}日報詳細画面{% endblock %}
+
 {% block content %}
   <!-- wrap始まり -->
   <div id="wrap" class="clearfix">
@@ -24,9 +26,11 @@
             </td>
           </tr>
           <tr>
-            <th>内容</th>
-            <td>{{ object.job_description|linebreaksbr }}
+            <th>業務内容</th>
+            {% comment %} <div style="border: 3px solid;"> {% endcomment %}
+             <td>{{ object.job_description|linebreaksbr }}
             </td>
+            {% comment %} </div> {% endcomment %}
           </tr>
         </table>
         <table>
@@ -44,6 +48,7 @@
           <tr>
             <th>コメント</th>
             <td>
+              {% comment %} 日報への作成者、日時、コメントを繰り返し表示 {% endcomment %}
               {% for com in obj.dailyreportcomment_set.all %}
                 <p>コメント作成者</p>
                 <p>{{ com.employee_code.name }}</p>

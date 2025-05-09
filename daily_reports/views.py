@@ -123,7 +123,7 @@ class DailyReportSearchView(ListView):
                 )
             return queryset
 
-#日報詳細
+#日報詳細画面
 @method_decorator(login_required, name="dispatch")
 class DailyReportDetailView(DetailView):
     model = DailyReport
@@ -135,5 +135,6 @@ class DailyReportDetailView(DetailView):
         context["employee"] = Employee.objects.select_related("employee_code").values(
             "name"
         )
+        #FKの無い側からある側にモデルを逆参照
         context['obj'] = DailyReport.objects.get(id=self.kwargs['pk'])
         return context
