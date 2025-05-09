@@ -2,10 +2,12 @@ from django.urls import path
 
 from .views import (
     DailyReportCommentCreateView,
-    DailyReportListView,
-    DailyReportEditView,
     DailyReportCreateView,
+    DailyReportDeleteView,
     DailyReportDetailView,
+    DailyReportEditView,
+    DailyReportListView,
+    daily_report_delete_confirm,
 )
 
 urlpatterns = [
@@ -20,6 +22,14 @@ urlpatterns = [
         name="daily_report_detail",
     ),
     path("", DailyReportListView.as_view(), name="daily_report_index"),
-    path("new/", DailyReportCreateView.as_view(),name="daily_report_new"),
+    path("new/", DailyReportCreateView.as_view(), name="daily_report_new"),
     path("<int:pk>/edit/", DailyReportEditView.as_view(), name="daily_report_edit"),
+    path(
+        "<int:pk>/delete_confirm/",
+        daily_report_delete_confirm,
+        name="daily_report_delete_confirm",
+    ),
+    path(
+        "<int:pk>/delete/", DailyReportDeleteView.as_view(), name="daily_report_delete"
+    ),
 ]
