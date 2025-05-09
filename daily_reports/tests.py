@@ -274,3 +274,6 @@ class DailyReportListViewTest(TestCase):
         self.assertContains(response, "Alice1")
         self.assertNotContains(response, "Alice2")
         self.assertNotContains(response, "Alice3")
+
+
+#

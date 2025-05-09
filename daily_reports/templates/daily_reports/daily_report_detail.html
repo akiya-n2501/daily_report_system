@@ -69,5 +69,9 @@
           </table>
       </section>
       <table>
+        <form action="{% url 'daily_report_delete_confirm' daily_report.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">削除</button>
+        </form>
   </div>   <!-- end wrap -->
   {% endblock %}

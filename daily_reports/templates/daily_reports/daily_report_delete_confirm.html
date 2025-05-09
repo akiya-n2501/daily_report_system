@@ -4,10 +4,22 @@
 
 {% block content %}
 <h1>削除の確認</h1>
-<p>{{ employee.name }} {{ daily_report.reported_on}} を削除します。よろしいですか？</p>
+<p>
+    以下の日報を削除します。よろしいですか？
+</p>
+<ul>
+
+    <li>
+        名前：{{ daily_report.employee_code.name }}
+    </li>
+    <li>
+        日付：{{ daily_report.reported_on}}
+    </li>
+</ul>
 <form method="POST" action="{% url 'daily_report_delete' daily_report.pk %}">
   {% csrf_token %}
-  <button type="submit">削除</button>
-  <a href="{% url 'daily_report_index' %}">キャンセル</a>
+  {% comment %} 削除ボタンは赤色 {% endcomment %}
+  <button type="submit" class="btn btn-danger">削除</button>
+  <a href="{% url 'daily_report_detail' daily_report.pk %}">キャンセル</a>
 </form>
 {% endblock content %}

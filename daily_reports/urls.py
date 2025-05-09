@@ -3,9 +3,11 @@ from django.urls import path
 from .views import (
     DailyReportCommentCreateView,
     DailyReportCreateView,
+    DailyReportDeleteView,
     DailyReportDetailView,
     DailyReportEditView,
     DailyReportListView,
+    daily_report_delete_confirm,
 )
 
 urlpatterns = [
@@ -24,7 +26,7 @@ urlpatterns = [
     path("<int:pk>/edit/", DailyReportEditView.as_view(), name="daily_report_edit"),
     path(
         "<int:pk>/delete_confirm/",
-        DailyReportDeleteConfirmView.as_view(),
+        daily_report_delete_confirm,
         name="daily_report_delete_confirm",
     ),
     path(
