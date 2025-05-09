@@ -156,8 +156,8 @@ class DailyReportCommentCreateViewUnitTest(TestCase):
             reported_on=datetime.date.today(),
         )
 
-    # 日報コメント新規作成のテスト
     def test_daily_report_comment_new_view_post_valid(self):
+        '''日報コメント新規作成のテスト'''
         data = {
             "comment": "これはコメントです。",
         }
@@ -171,8 +171,8 @@ class DailyReportCommentCreateViewUnitTest(TestCase):
         # POSTが有効なら302が通るはず
         self.assertEqual(response.status_code, 302)
 
-    # 日報コメントが作られていることを確認するテスト
     def test_daily_report_comment_new_view_post_created(self):
+        '''日報コメントが作られていることを確認するテスト'''
         data = {
             "comment": "これはコメントです。",
         }
@@ -191,8 +191,8 @@ class DailyReportCommentCreateViewUnitTest(TestCase):
         self.assertEqual(comment.employee_code, self.employee)
         self.assertEqual(comment.daily_report_code, self.daily_report)
 
-    # 日報コメントのフォームが空の時のテスト
     def test_daily_report_comment_invalid_form(self):
+        '''日報コメントのフォームが空の時のテスト'''
         data = {"comment": ""}
         url = reverse("daily_report_comment_new", kwargs={"pk": self.daily_report.pk})
         self.client.login(username="testuser", password="password")
@@ -203,8 +203,8 @@ class DailyReportCommentCreateViewUnitTest(TestCase):
             response, "コメントは1文字以上2000文字以内で入力してください。"
         )
 
-    # 日報コメントのフォームが空の時のテスト
     def test_daily_report_comment_long_invalid_form(self):
+        '''日報コメントのフォームが2000文字以上の時のテスト'''
         data = {"comment": "あ" * 2001}
         url = reverse("daily_report_comment_new", kwargs={"pk": self.daily_report.pk})
         self.client.login(username="testuser", password="password")
