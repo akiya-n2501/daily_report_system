@@ -1,17 +1,14 @@
 from datetime import datetime
 
-from django.views.generic import CreateView, ListView
-from django.shortcuts import render
-from .forms import DailyReportForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils.timezone import make_aware
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import CreateView, DetailView, ListView
 
-from .forms import DailyReportCommentForm, DailyReportSearchForm
+from .forms import DailyReportCommentForm, DailyReportForm, DailyReportSearchForm
 from .models import DailyReport, DailyReportComment, Employee
 
 
@@ -116,7 +113,7 @@ class DailyReportListView(ListView):
 @method_decorator(login_required, name="dispatch")
 class DailyReportDetailView(DetailView):
     model = DailyReport
-    template_name = 'daily_reports/daily_report_detail.html'
+    template_name = "daily_reports/daily_report_detail.html"
     context_object_name = "daily_report"
 
     def get_context_data(self, **kwargs):
@@ -125,5 +122,5 @@ class DailyReportDetailView(DetailView):
             "name"
         )
         # FKの無い側からある側にモデルを逆参照
-        context['obj'] = DailyReport.objects.get(id=self.kwargs['pk'])
+        context["obj"] = DailyReport.objects.get(id=self.kwargs["pk"])
         return context
