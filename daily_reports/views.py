@@ -44,21 +44,6 @@ class DailyReportCommentCreateView(CreateView):
         )
 
 
-# 日報一覧
-@method_decorator(login_required, name="dispatch")
-class DailyReportListView(ListView):
-    model = DailyReport
-    template_name = "daily_reports/daily_report_list.html"
-    context_object_name = "daily_reports"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["employee"] = Employee.objects.select_related("employee_code").values(
-            "name"
-        )
-        return context
-
-
 # 日報新規登録
 @method_decorator(login_required, name="dispatch")
 class DailyReportCreateView(CreateView):
@@ -73,12 +58,13 @@ class DailyReportCreateView(CreateView):
         )
 
 
-# 日報検索
+# 日報一覧画面 検索機能あり
 @method_decorator(login_required, name="dispatch")
-class DailyReportSearchView(ListView):
+class DailyReportListView(ListView):
     model = DailyReport
     template_name = "daily_reports/daily_report_list.html"
     context_object_name = "daily_reports"
+    ordering = "-reported_on"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

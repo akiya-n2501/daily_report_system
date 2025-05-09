@@ -8,15 +8,11 @@ from employees.models import Employee, User
 
 from . import views
 from .models import DailyReport, DailyReportComment
-
-
 from .views import DailyReportCreateView
-
-
 
 # # 日報新規登録画面の単体テスト
 # class DailyReportCreateViewTest(TestCase):
-    
+
 #     def setUp(self):
 #         self.factory = RequestFactory()
 #         self.user = User.objects.create_user(username="testuser", password="password")
@@ -33,7 +29,7 @@ from .views import DailyReportCreateView
 #         request = self.factory.post(reverse("daily_report_new"), data)
 #         request.user = self.user
 #         response = DailyReportCreateView.as_view(request)
-        
+
 #         # フォームのエラーを確認
 #         if response.status_code == 200:
 #             print(response.context_data['form'].errors)
@@ -97,7 +93,7 @@ from .views import DailyReportCreateView
 
 #         comment = DailyReport.objects.first()
 #         self.assertEqual(DailyReport.employee_code, self.employee)
-        
+
 
 #     # 日報のフォームが空の時のテスト
 #     def test_daily_report_invalid_form(self):
@@ -229,24 +225,6 @@ class DailyReportListViewTest(TestCase):
             """,
         )
 
-    def test_daily_report_list_view(self):
-        # ログイン
-        self.client.force_login(self.user)
-        response = self.client.get(reverse("daily_report_index"))
-        self.assertEqual(response.status_code, 200)
-
-        content = response.content.decode("utf-8")
-
-        self.assertIn(datetime.date.today().strftime("%Y/%m/%d"), content)
-        # 従業員名
-        self.assertIn(self.daily_report.employee_code.name, content)
-        # 先頭10文字
-        self.assertIn(self.daily_report.job_description[:10], content)
-
-
-# 日報一覧画面の検索機能のテスト
-class DailyReportSearchViewTest(TestCase):
-    def setUp(self):
         self.user1 = User.objects.create_user(username="testuser1", password="password")
         self.employee1 = Employee.objects.create(
             name="Alice", email="alice@example.com", department="HR", user=self.user1
@@ -274,6 +252,20 @@ class DailyReportSearchViewTest(TestCase):
             employee_code=self.employee3,
             job_description="Bunquet",
         )
+
+    def test_daily_report_list_view(self):
+        # ログイン
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("daily_report_index"))
+        self.assertEqual(response.status_code, 200)
+
+        content = response.content.decode("utf-8")
+
+        self.assertIn(datetime.date.today().strftime("%Y/%m/%d"), content)
+        # 従業員名
+        self.assertIn(self.daily_report.employee_code.name, content)
+        # 先頭10文字
+        self.assertIn(self.daily_report.job_description[:10], content)
 
     def test_daily_report_search_without_login(self):
         # ログインしていない時にリダイレクトされるか
