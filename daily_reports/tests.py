@@ -13,10 +13,9 @@ from .models import DailyReport, DailyReportComment
 from .views import DailyReportCreateView
 
 
-
 # # 日報新規登録画面の単体テスト
 # class DailyReportCreateViewTest(TestCase):
-    
+
 #     def setUp(self):
 #         self.factory = RequestFactory()
 #         self.user = User.objects.create_user(username="testuser", password="password")
@@ -33,7 +32,7 @@ from .views import DailyReportCreateView
 #         request = self.factory.post(reverse("daily_report_new"), data)
 #         request.user = self.user
 #         response = DailyReportCreateView.as_view(request)
-        
+
 #         # フォームのエラーを確認
 #         if response.status_code == 200:
 #             print(response.context_data['form'].errors)
@@ -97,7 +96,7 @@ from .views import DailyReportCreateView
 
 #         comment = DailyReport.objects.first()
 #         self.assertEqual(DailyReport.employee_code, self.employee)
-        
+
 
 #     # 日報のフォームが空の時のテスト
 #     def test_daily_report_invalid_form(self):
@@ -165,14 +164,12 @@ class DailyReportCommentCreateViewUnitTest(TestCase):
         data = {
             "comment": "これはコメントです。",
         }
-        url = reverse(
-            "daily_report_comment_new", kwargs={"report_id": self.daily_report.pk}
-        )
+        url = reverse("daily_report_comment_new", kwargs={"pk": self.daily_report.pk})
         request = self.factory.post(url, data)
 
         request.user = self.user1
         response = views.DailyReportCommentCreateView.as_view()(
-            request, report_id=self.daily_report.pk
+            request, pk=self.daily_report.pk
         )
         # POSTが有効なら302が通るはず
         self.assertEqual(response.status_code, 302)
@@ -182,14 +179,12 @@ class DailyReportCommentCreateViewUnitTest(TestCase):
         data = {
             "comment": "これはコメントです。",
         }
-        url = reverse(
-            "daily_report_comment_new", kwargs={"report_id": self.daily_report.pk}
-        )
+        url = reverse("daily_report_comment_new", kwargs={"pk": self.daily_report.pk})
         request = self.factory.post(url, data)
 
         request.user = self.user1
         response = views.DailyReportCommentCreateView.as_view()(
-            request, report_id=self.daily_report.pk
+            request, pk=self.daily_report.pk
         )
 
         self.assertEqual(DailyReportComment.objects.count(), 1)
@@ -202,9 +197,7 @@ class DailyReportCommentCreateViewUnitTest(TestCase):
     # 日報コメントのフォームが空の時のテスト
     def test_daily_report_comment_invalid_form(self):
         data = {"comment": ""}
-        url = reverse(
-            "daily_report_comment_new", kwargs={"report_id": self.daily_report.pk}
-        )
+        url = reverse("daily_report_comment_new", kwargs={"pk": self.daily_report.pk})
         self.client.login(username="testuser", password="password")
         response = self.client.post(url, data)
 
