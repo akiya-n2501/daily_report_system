@@ -8,14 +8,27 @@
       <div class="main">
         <section class="career">
         <h1>日報の更新</h1>
-        <form method="POST">
+
+        <div class="container">
+          <div class="row">
+              <div class="col-md-6 d-flex align-items-center">
+                  <strong>投稿者: </strong> <span class="ms-2">{{ employee_name }}</span>
+              </div>
+              <div class="col-md-6 text-md-end text-start">
+                  <strong>日付: </strong> <span>{{ reported_on|date:"Y/m/d" }}</span>
+              </div>
+          </div>
+
+<hr> <!-- 区切り線 -->
+
+<form method="POST">
             <table>
               {{ form.as_table }}
             </table>
           {% csrf_token %}
 
-          <button class="button" type="submit">登録</button>
-
+          <button class="btn btn-primary mt-3" type="submit">登録</button>
+          <a href="{% url 'daily_report_detail' obj.pk %}" class="btn btn-secondary mt-3">戻る</a>
       </form>
       </section>
       <section>

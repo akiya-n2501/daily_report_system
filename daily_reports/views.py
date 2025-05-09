@@ -67,12 +67,12 @@ class DailyReportCreateView(CreateView):
 
     def form_valid(self, form):
         if not form.instance.reported_on:
-            form.instance.reported_on = timezone.now().date() # 今日の日付を設定
+            form.instance.reported_on = timezone.now().date()  # 今日の日付を設定
         return super().form_valid(form)
-    
+
     def get_initial(self):
         initial = super().get_initial()
-        initial['reported_on'] = timezone.now().date() # 今日の日付を初期値に設定
+        initial['reported_on'] = timezone.now().date()  # 今日の日付を初期値に設定
         return initial
 
     def get_success_url(self):
@@ -142,9 +142,13 @@ class DailyReportEditView(UpdateView):
 
     # success_url = reverse_lazy('daily_report_detail', kwargs={"pk": self.kwargs.get("pk")})
     def get_context_data(self, **kwargs):
+        daily_report = get_object_or_404(DailyReport, id=self.kwargs.get("pk"))
+
         context = super(DailyReportEditView, self).get_context_data(**kwargs)
         context["message_type"] = "edit"
         context["obj"] = DailyReport.objects.get(id=self.kwargs["pk"])
+        context["employee_name"] = daily_report.employee_code.name
+        context["reported_on"] = daily_report.reported_on
         return context
 
     # 成功時のURLをpkから設定
