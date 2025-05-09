@@ -83,3 +83,14 @@ class DailyReportEditForm(forms.ModelForm):
         model = DailyReport
         fields = ['job_description']
         labels = {"job_description": "業務内容"}
+
+        def error_mess(self):
+            job_description = self.cleaned_data.get("job_description", "").strip()  # 前後の空白を削除
+            length = len(job_description)
+            if length < 1:
+                raise forms.ValidationError("コメントは1文字以上で入力してください。")
+            if length > 2000:
+                raise forms.ValidationError(
+                    f"コメントは2000文字以内で入力してください。（現在の文字数: {length}）"
+                )
+            return job_description
