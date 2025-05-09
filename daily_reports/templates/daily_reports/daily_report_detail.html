@@ -69,7 +69,7 @@
           </table>
       </section>
       <table>
-        <form action="{% url 'daily_report_delete_confirm' daily_report.pk %}">
+        <form action="{% url 'daily_report_delete_confirm' daily_report.pk %}", method="GET">
           {% csrf_token %}
           <button type="submit" class="btn btn-danger">削除</button>
         </form>
