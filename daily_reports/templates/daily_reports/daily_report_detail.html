@@ -37,7 +37,7 @@
           <tr>
           {% comment %} <td><p class="btn"><a href="{% url 'daily_report_index' %}">戻る</a></td> {% endcomment %}
           {% if request.user.is_authenticated %}
-            <td><p class="btn-edit"><a href="">編集</a></td>
+            <td><p class="btn-edit"><a href="{% url 'daily_report_edit' daily_report.pk%}">編集</a></td>
             {% comment %} <td><p class="btn-delete"><a href="">削除</a></td> {% endcomment %}
           {% endif %}
             </tr>
