@@ -98,7 +98,7 @@ class DailyReportEditForm(forms.ModelForm):
         fields = ["job_description"]
         labels = {"job_description": "業務内容"}
 
-        # コメントの文字数のバリデーション
+        # 業務内容の文字数のバリデーション
 
     def clean_job_description(self):
         job_description = self.cleaned_data.get(
