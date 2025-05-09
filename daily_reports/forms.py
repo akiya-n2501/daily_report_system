@@ -78,7 +78,7 @@ class DailyReportForm(forms.ModelForm):
         return daily_report
 
 # 日報編集画面
-class DailyReportForm(forms.ModelForm):
+class DailyReportEditForm(forms.ModelForm):
     class Meta:
         model = DailyReport
         fields = ['job_description']

@@ -18,4 +18,23 @@
 
       </form>
       </section>
+      <section>
+        <table>
+          <tr>
+            <th>コメント</th>
+            <td>
+              {% comment %} 日報への作成者、日時、コメントを繰り返し表示 {% endcomment %}
+              {% for com in obj.dailyreportcomment_set.all %}
+                <p>コメント作成者</p>
+                <p>{{ com.employee_code.name }}</p>
+                <p>日時、コメント</p>
+                <p>{{ com.created_at }}</p>
+                <p>{{ com.comment }}</p>
+              {% empty%}
+                <p>まだコメントはありません。</p>
+              {% endfor %}
+            </td>
+          </tr>
+        </table>
+      </section>
 {% endblock %}

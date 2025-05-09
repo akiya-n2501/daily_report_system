@@ -2,15 +2,14 @@ from datetime import datetime
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils.timezone import make_aware
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
 
 
-from .forms import DailyReportCommentForm, DailyReportForm, DailyReportSearchForm
+from .forms import DailyReportCommentForm, DailyReportForm, DailyReportSearchForm, DailyReportEditForm
 from .models import DailyReport, DailyReportComment, Employee
 
 
@@ -110,17 +109,18 @@ class DailyReportListView(ListView):
                 )
             return queryset
 
-# 日報の編集
+# 日報編集画面
 @method_decorator(login_required, name="dispatch")
-class DailyReportEditView(LoginRequiredMixin, UpdateView):
+class DailyReportEditView(UpdateView):
     model = DailyReport
-    form_class = DailyReportForm
+    form_class = DailyReportEditForm
     template_name = 'daily_reports/daily_report_edit.html'
 
     # success_url = reverse_lazy('daily_report_detail', kwargs={"pk": self.kwargs.get("pk")})
     def get_context_data(self, **kwargs):
        context = super(DailyReportEditView, self).get_context_data(**kwargs)
        context['message_type'] = "edit"
+       context["obj"] = DailyReport.objects.get(id=self.kwargs["pk"])
        return context
 
     # 成功時のURLをpkから設定
