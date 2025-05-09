@@ -36,10 +36,10 @@
         <table>
           <tr>
           <td><p class="btn"><a href="{% url 'daily_report_index' %}">戻る</a></td>
-          {% comment %} {% if request.user.is_authenticated %} {% endcomment %}
-            {% comment %} <td><p class="btn-edit"><a href="">編集</a></td> {% endcomment %}
+          {% if request.user.is_authenticated %}
+            <td><p class="btn-edit"><a href="">編集</a></td>
             {% comment %} <td><p class="btn-delete"><a href="">削除</a></td> {% endcomment %}
-          {% comment %} {% endif %} {% endcomment %}
+          {% endif %}
             </tr>
           </table>
       </section>
