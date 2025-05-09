@@ -16,7 +16,7 @@ from .models import DailyReport, DailyReportComment, Employee
 
 
 # 日報コメント新規作成画面
-@method_decorator(staff_member_required, name="dispatch")
+@method_decorator(login_required, name="dispatch")
 class DailyReportCommentCreateView(CreateView):
     model = DailyReportComment
     template_name = "daily_reports/daily_reports_comment_new.html"
@@ -125,7 +125,8 @@ class DailyReportSearchView(ListView):
                 )
             return queryset
 
-#日報詳細画面
+
+# 日報詳細画面
 @method_decorator(login_required, name="dispatch")
 class DailyReportDetailView(DetailView):
     model = DailyReport
@@ -137,6 +138,6 @@ class DailyReportDetailView(DetailView):
         context["employee"] = Employee.objects.select_related("employee_code").values(
             "name"
         )
-        #FKの無い側からある側にモデルを逆参照
+        # FKの無い側からある側にモデルを逆参照
         context['obj'] = DailyReport.objects.get(id=self.kwargs['pk'])
         return context
