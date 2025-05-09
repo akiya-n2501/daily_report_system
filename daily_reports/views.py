@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils.timezone import make_aware
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, DetailView
 
 from .forms import DailyReportCommentForm, DailyReportForm, DailyReportSearchForm
 from .models import DailyReport, DailyReportComment, Employee
