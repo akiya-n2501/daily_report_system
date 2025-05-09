@@ -133,11 +133,16 @@ class DailyReportEditView(LoginRequiredMixin, UpdateView):
     form_class = DailyReportForm
     template_name = 'daily_reports/daily_report_edit.html'
 
-    success_url = reverse_lazy('daily_reports:daily_report_detail')
+    # success_url = reverse_lazy('daily_report_detail', kwargs={"pk": self.kwargs.get("pk")})
     def get_context_data(self, **kwargs):
        context = super(DailyReportEditView, self).get_context_data(**kwargs)
        context['message_type'] = "edit"
        return context
+
+    # 成功時のURLをpkから設定
+    def get_success_url(self):
+        return reverse("daily_report_detail", kwargs={"pk": self.kwargs.get("pk")})
+
 
 # 日報詳細画面
 @method_decorator(login_required, name="dispatch")
