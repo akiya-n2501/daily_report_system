@@ -76,3 +76,10 @@ class DailyReportForm(forms.ModelForm):
         if commit:
             daily_report.save()
         return daily_report
+
+# 日報編集画面
+class DailyReportEditForm(forms.ModelForm):
+    class Meta:
+        model = DailyReport
+        fields = ['job_description']
+        labels = {"job_description": "業務内容"}

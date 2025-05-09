@@ -6,9 +6,10 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils.timezone import make_aware
-from django.views.generic import CreateView, DetailView, ListView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView
 
-from .forms import DailyReportCommentForm, DailyReportForm, DailyReportSearchForm
+
+from .forms import DailyReportCommentForm, DailyReportForm, DailyReportSearchForm, DailyReportEditForm
 from .models import DailyReport, DailyReportComment, Employee
 
 
@@ -107,6 +108,24 @@ class DailyReportListView(ListView):
                     )
                 )
             return queryset
+
+# 日報編集画面
+@method_decorator(login_required, name="dispatch")
+class DailyReportEditView(UpdateView):
+    model = DailyReport
+    form_class = DailyReportEditForm
+    template_name = 'daily_reports/daily_report_edit.html'
+
+    # success_url = reverse_lazy('daily_report_detail', kwargs={"pk": self.kwargs.get("pk")})
+    def get_context_data(self, **kwargs):
+       context = super(DailyReportEditView, self).get_context_data(**kwargs)
+       context['message_type'] = "edit"
+       context["obj"] = DailyReport.objects.get(id=self.kwargs["pk"])
+       return context
+
+    # 成功時のURLをpkから設定
+    def get_success_url(self):
+        return reverse("daily_report_detail", kwargs={"pk": self.kwargs.get("pk")})
 
 
 # 日報詳細画面
