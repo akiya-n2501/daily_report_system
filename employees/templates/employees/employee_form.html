@@ -19,14 +19,16 @@
         {% endfor %}
       </tbody>
     </table>
-<!-- パスワードフィールドのエラーメッセージを表示 -->
-{% if form.password.errors %}
-<div class="alert alert-danger">
-    {% for error in form.password.errors %}
-        <p>{{ error }}</p>
-    {% endfor %}
-</div>
+<!-- フィールドのエラーメッセージを表示 -->
+{% for field in form %}
+{% if field.errors %}
+    <div class="alert alert-danger">
+        {% for error in field.errors %}
+            <p>{{ error }}</p>
+        {% endfor %}
+    </div>
 {% endif %}
+{% endfor %}
   </div>
 
   <button type="submit" class="btn btn-primary mt-3">登録</button>

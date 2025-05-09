@@ -155,3 +155,49 @@ class EmployeeUpdateViewsUnitTest(TestCase):
         self.assertContains(
             response, "パスワードは英数字を含む8文字以上にしてください。"
         )
+
+    # 名前が長すぎる場合のテスト
+    def test_post_update_view_with_long_name(self):
+        data = {
+            "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1",
+            "email": "bob@example.com",
+            "username": "newUser1",
+            "password": "newPassword",
+        }
+        self.client.login(username="staff", password="password")
+
+        response = self.client.post(self.url, data)
+        self.assertContains(
+            response, "名前は50文字以内で入力してください。（現在の文字数: 51）"
+        )
+
+    # ユーザー名が長すぎる場合のテスト
+    def test_post_update_view_with_long_username(self):
+        data = {
+            "name": "Bob",
+            "email": "bob@example.com",
+            "username": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1",
+            "password": "newPassword",
+        }
+        self.client.login(username="staff", password="password")
+
+        response = self.client.post(self.url, data)
+        self.assertContains(
+            response, "ユーザー名は50文字以内で入力してください。（現在の文字数: 51）"
+        )
+
+    # 部署名が長すぎる場合のテスト
+    def test_post_update_view_with_long_department(self):
+        data = {
+            "name": "Bob",
+            "email": "bob@example.com",
+            "department": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1",
+            "username": "newUser1",
+            "password": "newPassword",
+        }
+        self.client.login(username="staff", password="password")
+
+        response = self.client.post(self.url, data)
+        self.assertContains(
+            response, "部署は100文字以内で入力してください。（現在の文字数: 101）"
+        )
