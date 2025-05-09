@@ -1,13 +1,17 @@
 from datetime import datetime
 
+from django.views.generic import CreateView, ListView
+from django.shortcuts import render
+from .forms import DailyReportForm
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils.timezone import make_aware
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, DetailView
 
-from .forms import DailyReportCommentForm, DailyReportForm, DailyReportSearchForm
+from .forms import DailyReportCommentForm, DailyReportSearchForm
 from .models import DailyReport, DailyReportComment, Employee
 
 
@@ -19,7 +23,7 @@ class DailyReportCommentCreateView(CreateView):
     form_class = DailyReportCommentForm
 
     def form_valid(self, form):
-        daily_report = get_object_or_404(DailyReport, id=self.kwargs.get("report_id"))
+        daily_report = get_object_or_404(DailyReport, id=self.kwargs.get("pk"))
         employee = Employee.objects.get(user=self.request.user)
 
         # formのインスタンスにemployeeとdaily_reportを設定
@@ -29,7 +33,7 @@ class DailyReportCommentCreateView(CreateView):
 
     # テンプレートで利用するためのコンテキストの設定
     def get_context_data(self, **kwargs):
-        daily_report = get_object_or_404(DailyReport, id=self.kwargs.get("report_id"))
+        daily_report = get_object_or_404(DailyReport, id=self.kwargs.get("pk"))
 
         context = super().get_context_data(**kwargs)
         context["employee_name"] = daily_report.employee_code.name
@@ -39,9 +43,7 @@ class DailyReportCommentCreateView(CreateView):
 
     # 成功時のURLをpkから設定
     def get_success_url(self):
-        return reverse(
-            "daily_report_detail", kwargs={"report_id": self.kwargs.get("report_id")}
-        )
+        return reverse("daily_report_detail", kwargs={"pk": self.kwargs.get("pk")})
 
 
 # 日報新規登録
@@ -108,3 +110,20 @@ class DailyReportListView(ListView):
                     )
                 )
             return queryset
+
+
+# 日報詳細画面
+@method_decorator(login_required, name="dispatch")
+class DailyReportDetailView(DetailView):
+    model = DailyReport
+    template_name = 'daily_reports/daily_report_detail.html'
+    context_object_name = "daily_report"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["employee"] = Employee.objects.select_related("employee_code").values(
+            "name"
+        )
+        # FKの無い側からある側にモデルを逆参照
+        context['obj'] = DailyReport.objects.get(id=self.kwargs['pk'])
+        return context

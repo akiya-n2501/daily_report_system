@@ -33,7 +33,7 @@
       <td>{{ daily_report.reported_on|date:"Y/m/d" }}</td>
       <td>{{ daily_report.employee_code.name }}</td>
       <td>
-        <a href="">
+        <a href="{% url 'daily_report_detail' daily_report.pk %}">
           {{ daily_report.job_description|slice:":15" }}
         </a>
       </td>
