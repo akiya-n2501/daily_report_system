@@ -46,6 +46,7 @@ class DailyReportCommentCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context["employee_name"] = daily_report.employee_code.name
         context["reported_on"] = daily_report.reported_on
+        context["daily_report"] = daily_report
         context["job_description"] = daily_report.job_description
         return context
 

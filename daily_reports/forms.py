@@ -8,6 +8,7 @@ class DailyReportCommentForm(forms.ModelForm):
     comment = forms.CharField(
         required=False,  # Django の標準必須バリデーションを無効化
         widget=forms.Textarea(attrs={"placeholder": "コメントを入力してください"}),
+        initial="",
     )
 
     class Meta:
@@ -25,7 +26,9 @@ class DailyReportCommentForm(forms.ModelForm):
         comment = self.cleaned_data.get("comment", "").strip()  # 前後の空白を削除
         length = len(comment)
         if length < 1:
-            raise forms.ValidationError("コメントは1文字以上で入力してください。")
+            raise forms.ValidationError(
+                "コメントは1文字以上2000文字以内で入力してください。"
+            )
         if length > 2000:
             raise forms.ValidationError(
                 f"コメントは2000文字以内で入力してください。（現在の文字数: {length}）"
@@ -77,20 +80,10 @@ class DailyReportForm(forms.ModelForm):
             daily_report.save()
         return daily_report
 
+
 # 日報編集画面
 class DailyReportEditForm(forms.ModelForm):
     class Meta:
         model = DailyReport
         fields = ['job_description']
         labels = {"job_description": "業務内容"}
-
-        def error_mess(self):
-            job_description = self.cleaned_data.get("job_description", "").strip()  # 前後の空白を削除
-            length = len(job_description)
-            if length < 1:
-                raise forms.ValidationError("コメントは1文字以上で入力してください。")
-            if length > 2000:
-                raise forms.ValidationError(
-                    f"コメントは2000文字以内で入力してください。（現在の文字数: {length}）"
-                )
-            return job_description
